@@ -25,4 +25,4 @@ jobs:
       run: composer require --dev phpunit/phpunit
 
     - name: Run Tests
-      run: vendor/bin/phpunit
+      run: vendor/bin/phpunit /src/apache/src
