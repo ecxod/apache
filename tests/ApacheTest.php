@@ -4,6 +4,24 @@ namespace Ecxod\Tests;
 
 use \PHPUnit\Framework\TestCase;
 
+// use function array_keys;
+// use function array_merge;
+// use function assert;
+// use function fclose;
+// use function file_put_contents;
+// use function fwrite;
+// use function ini_get_all;
+// use function is_array;
+// use function is_resource;
+// use function proc_close;
+// use function proc_open;
+// use function stream_get_contents;
+// use function sys_get_temp_dir;
+// use function tempnam;
+// use function trim;
+// use function unlink;
+// use function xdebug_is_debugger_active;
+
 
 class ApacheTest extends TestCase
 {
@@ -16,8 +34,8 @@ class ApacheTest extends TestCase
 
     protected function tearDown(): void
     {
-        if (\file_exists($this->tempFile)) {
-            \unlink($this->tempFile);
+        if (file_exists($this->tempFile)) {
+            unlink($this->tempFile);
         }
     }
 
