@@ -35,3 +35,4 @@ jobs:
       run: |
         pwd
         vendor/bin/phpunit src/apache/*.php
+      # run: vendor/bin/phpunit tests
