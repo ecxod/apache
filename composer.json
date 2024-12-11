@@ -1,15 +1,15 @@
 {
-    "name": "ecxod/ecxod",
+    "name": "ecxod/apache",
     "description": "Langweilige Library des Ecxod Projekts",
     "type": "library",
-    "keywords": ["ecxod", "ecxod"],
+    "keywords": ["ecxod", "apache"],
     "license": "MIT",
     "autoload": {
         "files": [
-            "src/ecxod/ecxod.php"
+            "src/apache/apache.php"
         ],
         "psr-4": {
-            "Ecxod\\Ecxod\\": "src/ecxod/"
+            "Ecxod\\Apache\\": "src/apache/"
         }
     },
     "authors": [
