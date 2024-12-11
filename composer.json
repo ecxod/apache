@@ -6,10 +6,12 @@
     "license": "MIT",
     "autoload": {
         "files": [
-            "src/apache/apache.php"
+            "src/apache/apache.php",
+            "tests/ApacheTest.php"
         ],
         "psr-4": {
-            "Ecxod\\Apache\\": "src/apache/"
+            "Ecxod\\Apache\\": "src/apache/",
+            "Ecxod\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -27,5 +29,8 @@
             ".github",
             "vendor"
         ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
     }
 }
