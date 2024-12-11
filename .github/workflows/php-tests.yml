@@ -32,7 +32,8 @@ jobs:
     #     ls -a 
 
     - name: Run Tests
+    # run: |
+    #   pwd
+    #   vendor/bin/phpunit src/apache/*.php
       run: |
-        pwd
-        vendor/bin/phpunit src/apache/*.php
-      # run: vendor/bin/phpunit tests
+        vendor/bin/phpunit tests
