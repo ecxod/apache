@@ -27,7 +27,8 @@ jobs:
     - name: list files
       run: |
         pwd
-        cd /
+        cd src/apache
+        pwd
         ls -a 
 
     # - name: Run Tests
