@@ -7,7 +7,7 @@ namespace Ecxod\Apache;
 /** 
  * @package Ecxod\Apache 
  */
-class Apache extends \PHPUnit\Framework\TestCase
+class Apache
 {
     /**
      * liest eine Apache2 Macro-Konfigurationsdatei mit PHP ein.
