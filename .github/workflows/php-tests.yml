@@ -25,9 +25,9 @@ jobs:
       run: composer require --dev phpunit/phpunit
 
     - name: list files
-      run: 
-        - cd /
-        - ls -a 
+      run: |
+        cd /
+        ls -a 
 
     # - name: Run Tests
     #   run: vendor/bin/phpunit .
