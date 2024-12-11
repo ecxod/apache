@@ -22,7 +22,6 @@ class ApacheTest extends TestCase
         }
     }
 
-
     public function parseApacheMacroConfig()
     {
         $configContent = <<<EOD
