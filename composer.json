@@ -30,7 +30,7 @@
             "vendor"
         ]
     },
-    "require-dev": {
+    "suggests-dev": {
         "phpunit/phpunit": "^11.5"
     }
 }
