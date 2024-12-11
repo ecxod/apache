@@ -1,9 +1,8 @@
 <?php
 
-namespace Tests;
+namespace Ecxod\Tests;
 
-use PHPUnit\Framework\TestCase;
-use Ecxod\Apache\Apache;
+use \PHPUnit\Framework\TestCase;
 
 
 class ApacheTest extends TestCase
@@ -17,8 +16,8 @@ class ApacheTest extends TestCase
 
     protected function tearDown(): void
     {
-        if (file_exists($this->tempFile)) {
-            unlink($this->tempFile);
+        if (\file_exists($this->tempFile)) {
+            \unlink($this->tempFile);
         }
     }
 
@@ -42,8 +41,7 @@ EOD;
         $this->assertEquals('Value1', $result['KEY1']);
         $this->assertEquals('Value2 with spaces', $result['KEY2']);
         $this->assertEquals('Value3 continued on next line', $result['KEY3']);
-        $this->assertEquals('Value4', $result['KEY4']);            
-
+        $this->assertEquals('Value4', $result['KEY4']);
     }
 
     public function testParseApacheMacroConfigWithNonExistentFile()
