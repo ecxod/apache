@@ -26,6 +26,7 @@ jobs:
 
     - name: list files
       run: |
+        pwd
         cd /
         ls -a 
 
