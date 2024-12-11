@@ -21,5 +21,8 @@ jobs:
     - name: Install Dependencies
       run: composer install --prefer-dist --no-progress
 
+    - name: Install PHPUnit
+      run: composer require --dev phpunit/phpunit
+
     - name: Run Tests
       run: vendor/bin/phpunit
