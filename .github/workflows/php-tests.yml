@@ -24,16 +24,6 @@ jobs:
     - name: Install PHPUnit
       run: composer require --dev phpunit/phpunit
 
-    # - name: list files
-    #   run: |
-    #     pwd
-    #     cd src/apache
-    #     pwd
-    #     ls -a 
-
     - name: Run Tests
-    # run: |
-    #   pwd
-    #   vendor/bin/phpunit src/apache/*.php
       run: |
         vendor/bin/phpunit tests
