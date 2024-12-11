@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Ecxod\Ecxod;
+namespace Ecxod\Apache;
 
-class Ecxod
+class Apache
 {
 }
