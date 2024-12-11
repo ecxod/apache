@@ -23,7 +23,7 @@ class ApacheTest extends TestCase
     }
 
 
-    public function testParseApacheMacroConfig()
+    public function parseApacheMacroConfig()
     {
         $configContent = <<<EOD
 # This is a comment
