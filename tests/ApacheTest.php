@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 use Ecxod\Apache\Apache;
 
 
-class ApacheMacroConfigTest extends TestCase
+class ApacheTest extends TestCase
 {
     private $tempFile;
 
