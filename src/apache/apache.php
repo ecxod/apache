@@ -114,6 +114,7 @@ class Apache
 
             // Ignoriere Kommentare und leere Zeilen
             if (empty($line) || $line[0] === '#') {
+                $index-- ;
                 continue;
             }
 
