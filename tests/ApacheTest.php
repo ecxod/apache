@@ -89,17 +89,17 @@ EOD;
         // // $this->assertArrayHasKey('KEYn', $result[1]);
 
         // // Check values of each row
-        $this->assertEquals('VALUEa1', $result[1]['KEY1']);
-        $this->assertEquals('VALUEa2', $result[1]['KEY2']);
-        $this->assertEquals('VALUEan', $result[1]['KEYn']);
+        $this->assertEquals('VALUEa1', $result[0]['KEY1']);
+        $this->assertEquals('VALUEa2', $result[0]['KEY2']);
+        $this->assertEquals('VALUEan', $result[0]['KEYn']);
 
-        $this->assertEquals('VALUEb1', $result[2]['KEY1']);
-        $this->assertEquals('VALUEb2', $result[2]['KEY2']);
-        $this->assertEquals('VALUEbn', $result[2]['KEYn']);
+        $this->assertEquals('VALUEb1', $result[1]['KEY1']);
+        $this->assertEquals('VALUEb2', $result[1]['KEY2']);
+        $this->assertEquals('VALUEbn', $result[1]['KEYn']);
 
-        $this->assertEquals('VALUEc1', $result[3]['KEY1']);
-        $this->assertEquals('VALUEc2', $result[3]['KEY2']);
-        $this->assertEquals('VALUEcn', $result[3]['KEYn']);
+        $this->assertEquals('VALUEc1', $result[2]['KEY1']);
+        $this->assertEquals('VALUEc2', $result[2]['KEY2']);
+        $this->assertEquals('VALUEcn', $result[2]['KEYn']);
     }
 
     public function testParseApacheMacroConfigLinear_WithNonExistentFile(): void
