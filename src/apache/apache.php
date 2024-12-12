@@ -25,7 +25,7 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function parseApacheMacroConfig(string $filePath = null)
+    function parseApacheMacroConfig(string $filePath = null): array
     {
         // Check if the file exists
         if (!file_exists($filePath)) {
@@ -65,6 +65,66 @@ class Apache
             }
 
             $currentValue = '';
+        }
+
+        return $result;
+    }
+
+
+
+    /**
+     * liest eine Apache2 Macro-Konfigurationsdatei mit PHP ein.
+     * Diese Funktion liest die durch Leerzeichen getrennten Variablen und der möglichen Zeilenumbrüche mit "\".
+     * Beispielzeile :
+     * WERT1 WERT2 WERT3 WERT4 WERT5 
+     * oder
+     * WERT1 WERT2 WERT3 \
+     * WERT4 WERT5 
+     * 
+     * @param string $filePath 
+     * @return array 
+     * @author Christian <c@zp1.net>
+     * @link https://github.com/ecxod/apache
+     * @license MIT
+     * @version 1.0.0
+     */
+    function parseApacheMacroConfigLinear(string $filePath = null): array
+    {
+        if (!file_exists($filePath)) {
+            error_log("Error: Configuration File '$filePath' does not exist.");
+            die("Configuration file not found. Check the error log for details.");
+        }
+
+        $content = file_get_contents($filePath);
+        $lines = array_filter(array_map('trim', explode("\n", $content)));
+        $result = [];
+        $keys = [];
+        $currentline = '';
+
+        foreach ($lines as $index => $line) {
+            $line = trim($line);
+
+            // Ignoriere Kommentare und leere Zeilen
+            if (empty($line) || $line[0] === '#') {
+                continue;
+            }
+
+            // Behandle Zeilenumbrüche mit "\"
+            if (substr($line, -1) === '\\') {
+                $currentline .= rtrim($line, '\\') . ' ';
+                continue;
+            }
+
+            $currentline .= $line;
+
+            if ($index === 0) {
+                $keys = preg_split('/\s+/', $currentline);
+            } else {
+                $values = preg_split('/\s+/', $currentline);
+                if (count($values) === count($keys)) {
+                    $result[] = array_combine($keys, $values);
+                }
+            }
         }
 
         return $result;
