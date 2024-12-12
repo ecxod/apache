@@ -126,7 +126,7 @@ class Apache
 
             // Ignoriere Kommentare und leere Zeilen
             if (empty($line) || $line[0] === '#') {
-                $lines[$index]="";
+                $lines[$index]=null;
                 continue;
             }
         }
@@ -136,8 +136,7 @@ class Apache
         foreach ($lines as $index => $line) {
 
             if (substr(string: $line, offset: -1) === '\\') {
-                $line .= rtrim(string: $line, characters: '\\');
-                $lines[$index]=$line;
+                $lines[$index] = rtrim(string: $line, characters: '\\');
                 continue;
             }
 
