@@ -69,11 +69,12 @@ EOD;
 
     public function testParseApacheMacroConfigLinear(): void
     {
+
+        $keysArr = ["KEY1", "KEY2", "KEYn"];
         $configContent = <<<EOD
 # This is a comment
-KEY1 \
-    KEY2   KEYn
-VALUEa1    VALUEa2    VALUEan
+VALUEa1    VALUEa2    \
+    VALUEan
 VALUEb1    VALUEb2    VALUEbn
 VALUEc1    VALUEc2    VALUEcn
 EOD;
@@ -82,7 +83,7 @@ EOD;
         error_log("2 ". strval($this->tempFile));
         error_log("2 ". strval(file_get_contents($this->tempFile)));
 
-        $result = $this->apache->parseApacheMacroConfigLinear($this->tempFile);
+        $result = $this->apache->parseApacheMacroConfigLinear(filePath: $this->tempFile,keysArr: $keysArr);
 
         error_log("2 ". json_encode($result));
 
