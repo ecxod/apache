@@ -72,7 +72,7 @@ EOD;
         $configContent = <<<EOD
 # This is a comment
 KEY1 \
-KEY2   KEYn
+    KEY2   KEYn
 VALUEa1    VALUEa2    VALUEan
 VALUEb1    VALUEb2    VALUEbn
 VALUEc1    VALUEc2    VALUEcn

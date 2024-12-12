@@ -118,10 +118,18 @@ class Apache
             }
 
             // Behandle Zeilenumbrüche mit "\"
-            if (substr($line, -1) === '\\') {
-                $currentline .= rtrim($line, '\\') . ' ';
+            // if (substr($line, -1) === '\\') {
+            //     $currentline .= rtrim($line, '\\') . ' ';
+            //     continue;
+            // }
+
+            if (substr(string: $line, offset: -1) === '\\') {
+                $currentline .= rtrim(string: $line, characters: '\\');
                 continue;
             }
+
+
+
 
             $currentline .= $line;
 
