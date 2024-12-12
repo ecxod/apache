@@ -19,21 +19,23 @@ class Apache
      * WERT4 WERT5 
      * 
      * @param string $filePath 
-     * @return array 
+     * @return array|bool 
      * @author Christian <c@zp1.net>
      * @link https://github.com/ecxod/apache
      * @license MIT
      * @version 1.0.0
      */
-    function parseApacheMacroConfig(string $filePath = null): array
+    function parseApacheMacroConfig(string $filePath = null): array|bool
     {
         // Check if the file exists
         if (!file_exists($filePath)) {
             error_log("Error: Configuration File '$filePath' does not exist.");
-            die("Configuration file not found. Check the error log for details.");
+            echo "Configuration file not found. Check the error log for details.";
+            return false;
         } elseif (empty($filePath)) {
             error_log("Error: Variable \$filePath' is empty.");
-            die("Configuration file unknown. Check the error log for details.");
+            echo "Configuration file unknown. Check the error log for details.";
+            return false;
         }
 
         $content = file_get_contents(filename: $filePath);
@@ -83,17 +85,22 @@ class Apache
      * VALUEc1    VALUEc2    VALUEcn
      * 
      * @param string $filePath 
-     * @return array 
+     * @return array|bool 
      * @author Christian <c@zp1.net>
      * @link https://github.com/ecxod/apache
      * @license MIT
      * @version 1.0.0
      */
-    function parseApacheMacroConfigLinear(string $filePath = null): array
+    function parseApacheMacroConfigLinear(string $filePath = null): array|bool
     {
         if (!file_exists($filePath)) {
             error_log("Error: Configuration File '$filePath' does not exist.");
-            die("Configuration file not found. Check the error log for details.");
+            echo "Configuration file not found. Check the error log for details.";
+            return false;
+        } elseif (empty($filePath)) {
+            error_log("Error: Variable \$filePath' is empty.");
+            echo "Configuration file unknown. Check the error log for details.";
+            return false;
         }
 
         $content = file_get_contents($filePath);
