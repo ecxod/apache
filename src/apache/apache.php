@@ -106,8 +106,6 @@ class Apache
         $content = file_get_contents($filePath);
         $lines = array_filter(array_map('trim', explode("\n", $content)));
 
-        $currentline = '';
-
         foreach ($lines as $index => $line) {
 
             $line = trim(strval($line));
@@ -119,6 +117,7 @@ class Apache
             }
 
             // Behandle Zeilenumbrüche mit "\"
+            $currentline = '';
             if (substr(string: $line, offset: -1) === '\\') {
                 $currentline = rtrim(string: $line, characters: '\\');
                 continue;
