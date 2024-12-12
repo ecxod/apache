@@ -64,7 +64,7 @@ EOD;
 
 
 
-    public function testParseApacheMacroConfigLinear(): void
+    public function testparseApacheMacroConfigLinear(): void
     {
         $configContent = <<<EOD
 # This is a comment
@@ -100,13 +100,13 @@ EOD;
         $this->assertEquals('VALUEcn', $result[2]['KEYn']);
     }
     
-    public function testParseApacheMacroConfigLinearWithNonExistentFile(): void
+    public function testparseApacheMacroConfigLinearWithNonExistentFile(): void
     {
         $this->expectException(\Error::class);
         $this->apache->parseApacheMacroConfigLinear('non_existent_file_linear.txt');
     }
 
-    public function testParseApacheMacroConfigLinearWithEmptyFilePath(): void
+    public function testparseApacheMacroConfigLinearWithEmptyFilePath(): void
     {
         $this->expectException(\Error::class);
         $this->apache->parseApacheMacroConfigLinear('');
