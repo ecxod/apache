@@ -130,8 +130,10 @@ class Apache
                 continue;
             }
             if (substr(string: $line, offset: -1) === '\\') {
-                $currentline .= trim(rtrim(string: $line, characters: '\\'));
+                $currentline = trim(rtrim(string: $line, characters: '\\'));
                 continue;
+            }else{
+                $currentline .= $line;
             }
             $lines[$index] = $currentline;
         }
