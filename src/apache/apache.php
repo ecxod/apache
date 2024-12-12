@@ -91,7 +91,7 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function parseApacheMacroConfigLinear(string $filePath = null): array|bool
+    function parseApacheMacroConfigLinear(string $filePath = "")
     {
         if (!file_exists($filePath)) {
             error_log("Error: Configuration File '$filePath' does not exist.");
