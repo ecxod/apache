@@ -116,9 +116,6 @@ class Apache
 
         error_log("2arr[$keysCount] ". json_encode($lines));
 
-
-
-
         $result = [];
         $keys = [];
         $currentline = '';
@@ -129,13 +126,26 @@ class Apache
 
             // Ignoriere Kommentare und leere Zeilen
             if (empty($line) || $line[0] === '#') {
+                $lines[$index]="";
                 continue;
             }
+        }
+
+        error_log("2arr[$keysCount] ". json_encode($lines));
+
+        foreach ($lines as $index => $line) {
 
             if (substr(string: $line, offset: -1) === '\\') {
                 $line .= rtrim(string: $line, characters: '\\');
+                $lines[$index]=$line;
                 continue;
             }
+
+        }
+
+        error_log("2arr[$keysCount] ". json_encode($lines));
+
+        foreach ($lines as $index => $line) {
 
             $lineArr = preg_split('/\s+/', $line);
 
@@ -145,7 +155,6 @@ class Apache
 
             error_log("22[$index]line ". strval($line));
 
-            error_log("23[$index]currentline ". strval($currentline));
 
 
             if ($index === 0) {
