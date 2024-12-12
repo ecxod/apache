@@ -135,31 +135,11 @@ class Apache
             }else{
                 $currentline .= $line;
             }
-            $lines[$index] = $currentline;
+            $lines[$index] = $currentline." ";
         }
 
+        error_log("21[$index] = " . strval($currentline));
 
-        foreach ($lines as $index => $line) {
-
-            //$lineArr = preg_split('/\s+/', $line);
-
-            error_log("21[$index]currentline " . strval($currentline));
-
-            // $currentline ?? $line;
-
-            // error_log("22[$index]line " . strval($line));
-
-
-
-            // if ($index === 0) {
-            //     $keys = preg_split('/\s+/', $currentline);
-            // } else {
-            //     $values = preg_split('/\s+/', $currentline);
-            //     if (count($values) === count($keys)) {
-            //         $result[] = array_combine($keys, $values);
-            //     }
-            // }
-        }
 
         return $result;
     }
