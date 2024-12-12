@@ -55,7 +55,7 @@ EOD;
 
     public function testParseApacheMacroConfig_WithEmptyFilePath(): void
     {
-        $result = $this->apache->parseApacheMacroConfig('');
+        $result = $this->apache->parseApacheMacroConfig();
         $this->assertFalse($result);
     }
 
@@ -110,7 +110,7 @@ EOD;
 
     public function testParseApacheMacroConfigLinear_WithEmptyFilePath(): void
     {
-        $result = $this->apache->parseApacheMacroConfigLinear('');
+        $result = $this->apache->parseApacheMacroConfigLinear();
         $this->assertFalse($result);
     }
 }

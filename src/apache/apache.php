@@ -18,7 +18,7 @@ class Apache
      * WERT1 WERT2 WERT3 \
      * WERT4 WERT5 
      * 
-     * @param string $filePath 
+     * @param string $filePath - Apache2 Macro-Konfigurationsdatei 
      * @return array|bool 
      * @author Christian <c@zp1.net>
      * @link https://github.com/ecxod/apache
@@ -28,13 +28,11 @@ class Apache
     function parseApacheMacroConfig(string $filePath = ""): array|bool
     {
         // Check if the file exists
-        if (!file_exists($filePath)) {
-            error_log("Error: Configuration File '$filePath' does not exist.");
-            //echo "Configuration file not found. Check the error log for details.";
+        if (empty($filePath)) {
+            error_log("Error: Configuration file not set or empty.");
             return false;
-        } elseif (empty($filePath)) {
-            error_log("Error: Variable \$filePath' is empty.");
-            //echo "Configuration file unknown. Check the error log for details.";
+        } else if (!file_exists($filePath)) {
+            error_log("Error: Configuration File '$filePath' does not exist.");
             return false;
         }
 
@@ -74,16 +72,17 @@ class Apache
 
 
     /**
-     * liest eine Apache2 Macro-Konfigurationsdatei mit PHP ein.
-     * Diese Funktion liest die durch Leerzeichen getrennten Variablen und der möglichen Zeilenumbrüche mit "\".
-     * Beispielzeile :
-     * # This is a comment
-     * KEY1       KEY2       KEYn
-     * VALUEa1    VALUEa2    VALUEan
-     * VALUEb1    VALUEb2    VALUEbn
-     * VALUEc1    VALUEc2    VALUEcn
+     * liest eine Apache2 Macro-Konfigurationsdatei ein.  
+     * Diese Funktion liest die durch Leerzeichen getrennten Variablen und der möglichen Zeilenumbrüche mit "\".  
+     * Beispielzeile :  
+     * \# This is a comment  
+     * VALUEa1    VALUEa2    \  
+     *               VALUEan  
+     * VALUEb1    VALUEb2    VALUEbn  
+     * VALUEc1    VALUEc2    VALUEcn  
      * 
-     * @param string $filePath 
+     * @param string $filePath - Apache2 Macro-Konfigurationsdatei 
+     * @param array $keysArr -  zB. ["KEY1", "KEY2", "KEYn"];
      * @return array|bool 
      * @author Christian <c@zp1.net>
      * @link https://github.com/ecxod/apache
@@ -93,17 +92,14 @@ class Apache
     function parseApacheMacroConfigLinear(string $filePath = "", array $keysArr = []): array|bool
     {
 
-        if (!file_exists($filePath)) {
-            error_log("Error: Configuration File '$filePath' does not exist.");
-            //echo "Configuration file not found. Check the error log for details.";
+        if (empty($filePath)) {
+            error_log("Error: Configuration file not set or empty.");
             return false;
-        } elseif (empty($filePath)) {
-            error_log("Error: Variable \$filePath' is empty.");
-            //echo "Configuration file unknown. Check the error log for details.";
+        } elseif (!file_exists($filePath)) {
+            error_log("Error: Configuration File '$filePath' does not exist.");
             return false;
         } elseif (empty($keysArr)) {
             error_log("Error: Variable \$keys' is empty.");
-            //echo "Configuration file unknown. Check the error log for details.";
             return false;
         }
 
