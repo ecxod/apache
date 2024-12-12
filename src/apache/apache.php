@@ -30,11 +30,11 @@ class Apache
         // Check if the file exists
         if (!file_exists($filePath)) {
             error_log("Error: Configuration File '$filePath' does not exist.");
-            echo "Configuration file not found. Check the error log for details.";
+            //echo "Configuration file not found. Check the error log for details.";
             return false;
         } elseif (empty($filePath)) {
             error_log("Error: Variable \$filePath' is empty.");
-            echo "Configuration file unknown. Check the error log for details.";
+            //echo "Configuration file unknown. Check the error log for details.";
             return false;
         }
 
