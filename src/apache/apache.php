@@ -89,7 +89,7 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function parseApacheMacroConfigLinear(string $filePath = "", array $keysArr = []): array|bool
+    function parseApacheMacroConfigLinear(string $filePath = "", array $keysArr = [], string $macro="SSLHost"): array|bool
     {
 
         $currentline = '';
@@ -105,6 +105,9 @@ class Apache
         }
 
         $content = file_get_contents($filePath);
+        preg_match_all('/^\s*Use\s+SSLHost.*$/m', $content, $matches);
+        $sslHostLines = $matches[0];
+
         $lines = array_filter(array_map('trim', explode("\n", $content)));
 
         foreach ($lines as $index => $line) {
@@ -118,7 +121,6 @@ class Apache
             }
 
             // Behandle Zeilenumbrüche mit "\"
-            
             if (substr(string: $line, offset: -1) === '\\') {
                 $currentline = rtrim(string: $line, characters: '\\');
                 continue;
