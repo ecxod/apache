@@ -48,23 +48,25 @@ EOD;
         $this->assertEquals('Value4', $result['KEY4']);
     }
 
-    public function testParseApacheMacroConfigWithNonExistentFile(): void
+    public function testParseApacheMacroConfig_WithNonExistentFile(): void
     {
         $this->expectException(\Error::class);
         $this->apache->parseApacheMacroConfig('non_existent_file.txt');
+        $this->assertTrue(false);
     }
 
-    public function testParseApacheMacroConfigWithEmptyFilePath(): void
+    public function testParseApacheMacroConfig_WithEmptyFilePath(): void
     {
         $this->expectException(\Error::class);
         $this->apache->parseApacheMacroConfig('');
+        $this->assertTrue(false);
     }
 
 
 
 
 
-    public function testparseApacheMacroConfigLinear(): void
+    public function testParseApacheMacroConfigLinear(): void
     {
         $configContent = <<<EOD
 # This is a comment
@@ -100,16 +102,18 @@ EOD;
         $this->assertEquals('VALUEcn', $result[2]['KEYn']);
     }
     
-    public function testparseApacheMacroConfigLinearWithNonExistentFile(): void
+    public function testParseApacheMacroConfigLinear_WithNonExistentFile(): void
     {
         $this->expectException(\Error::class);
         $this->apache->parseApacheMacroConfigLinear('non_existent_file_linear.txt');
+        $this->assertTrue(false);
     }
 
-    public function testparseApacheMacroConfigLinearWithEmptyFilePath(): void
+    public function testParseApacheMacroConfigLinear_WithEmptyFilePath(): void
     {
         $this->expectException(\Error::class);
         $this->apache->parseApacheMacroConfigLinear('');
+        $this->assertTrue(false);
     }
 
 
