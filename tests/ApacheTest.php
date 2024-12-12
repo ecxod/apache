@@ -79,7 +79,7 @@ EOD;
 
         $result = $this->apache->parseApacheMacroConfigLinear($this->tempFile);
 
-        error_log(var_export($result) ?? '****', 3, '/raid/home/christian/wdrive/ecxod/apache/log/error.log');
+        error_lo g( strval(var_export($result)) , 3, '/raid/home/christian/wdrive/ecxod/apache/log/error.log');
 
         $this->assertIsArray($result);
 
