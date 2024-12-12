@@ -76,10 +76,11 @@ class Apache
      * liest eine Apache2 Macro-Konfigurationsdatei mit PHP ein.
      * Diese Funktion liest die durch Leerzeichen getrennten Variablen und der möglichen Zeilenumbrüche mit "\".
      * Beispielzeile :
-     * WERT1 WERT2 WERT3 WERT4 WERT5 
-     * oder
-     * WERT1 WERT2 WERT3 \
-     * WERT4 WERT5 
+     * # This is a comment
+     * KEY1       KEY2       KEYn
+     * VALUEa1    VALUEa2    VALUEan
+     * VALUEb1    VALUEb2    VALUEbn
+     * VALUEc1    VALUEc2    VALUEcn
      * 
      * @param string $filePath 
      * @return array 
