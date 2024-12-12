@@ -114,15 +114,12 @@ class Apache
         $content = file_get_contents($filePath);
         $lines = array_filter(array_map('trim', explode("\n", $content)));
 
-        error_log("2arr[$keysCount]1 " . json_encode($lines));
-
         $currentline = '';
 
         foreach ($lines as $index => $line) {
 
             $line = trim(strval($line));
 
-            // Ignoriere Kommentare und leere Zeilen
             if (empty($line) || $line[0] === '#') {
                 $lines[$index] = "";
                 continue;
@@ -131,16 +128,18 @@ class Apache
                 $currentline = rtrim(string: $line, characters: '\\');
                 continue;
             } else {
-                $currentline .= $line . " ";
+                $currentline .= "$line ";
             }
-            $lines[$index] = $currentline . " ";
+            $lines[$index] = "$currentline ";
         }
 
-        error_log("21[$index] = " . strval($currentline));
-        //$currentArr = array_filter(explode(" " , $currentline), fn($value) => $value !== "");
-        $currentArr = array_filter(preg_split('/\s+/', $currentline), fn($value) => $value !== "");
+        $valsArr = array_filter(preg_split('/\s+/', $currentline), fn($value) => $value !== "");
 
-        return  $currentArr;
+        $result = array_map(function($chunk) use ($keysArr) {
+            return array_combine($keysArr, $chunk);
+        }, array_chunk($valsArr, count($keysArr)));
+
+        return  $result;
     }
 }
 
