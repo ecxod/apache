@@ -80,12 +80,8 @@ VALUEc1    VALUEc2    VALUEcn
 EOD;
 
         file_put_contents($this->tempFile, $configContent);
-        error_log("2 ". strval($this->tempFile));
-        error_log("2 ". strval(file_get_contents($this->tempFile)));
 
         $result = $this->apache->parseApacheMacroConfigLinear(filePath: $this->tempFile,keysArr: $keysArr);
-
-        error_log("2 ". json_encode($result));
 
         $this->assertIsArray($result);
 

@@ -94,22 +94,19 @@ class Apache
     function parseApacheMacroConfigLinear(string $filePath = "", array $keysArr = [])
     {
 
-
         if (!file_exists($filePath)) {
             error_log("Error: Configuration File '$filePath' does not exist.");
-            echo "Configuration file not found. Check the error log for details.";
+            //echo "Configuration file not found. Check the error log for details.";
             return false;
         } elseif (empty($filePath)) {
             error_log("Error: Variable \$filePath' is empty.");
-            echo "Configuration file unknown. Check the error log for details.";
+            //echo "Configuration file unknown. Check the error log for details.";
             return false;
         } elseif (empty($keysArr)) {
             error_log("Error: Variable \$keys' is empty.");
-            echo "Configuration file unknown. Check the error log for details.";
+            //echo "Configuration file unknown. Check the error log for details.";
             return false;
         }
-
-        $keysCount = count($keysArr);
 
         $content = file_get_contents($filePath);
         $lines = array_filter(array_map('trim', explode("\n", $content)));
@@ -120,10 +117,13 @@ class Apache
 
             $line = trim(strval($line));
 
+            // Ignoriere Kommentare und leere Zeilen
             if (empty($line) || $line[0] === '#') {
                 $lines[$index] = "";
                 continue;
             }
+
+            // Behandle Zeilenumbrüche mit "\"
             if (substr(string: $line, offset: -1) === '\\') {
                 $currentline = rtrim(string: $line, characters: '\\');
                 continue;
@@ -133,13 +133,12 @@ class Apache
             $lines[$index] = "$currentline ";
         }
 
-        $valsArr = array_filter(preg_split('/\s+/', $currentline), fn($value) => $value !== "");
+        $valsArr = array_filter(preg_split('/\s+/', $currentline), fn ($value) => $value !== "");
 
-        $result = array_map(function($chunk) use ($keysArr) {
+        $result = array_map(function ($chunk) use ($keysArr) {
             return array_combine($keysArr, $chunk);
         }, array_chunk($valsArr, count($keysArr)));
 
         return  $result;
     }
 }
-
