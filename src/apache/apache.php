@@ -118,12 +118,6 @@ class Apache
                 continue;
             }
 
-            // Behandle Zeilenumbrüche mit "\"
-            // if (substr($line, -1) === '\\') {
-            //     $currentline .= rtrim($line, '\\') . ' ';
-            //     continue;
-            // }
-
             if (substr(string: $line, offset: -1) === '\\') {
                 $currentline .= rtrim(string: $line, characters: '\\');
                 continue;
@@ -132,7 +126,7 @@ class Apache
 
             error_log("2[$index]line ". strval($line));
 
-            $currentline .= $line;
+            $currentline = $line;
 
             error_log("2[$index]currentline ". strval($currentline));
 
