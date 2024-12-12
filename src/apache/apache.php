@@ -25,7 +25,7 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function parseApacheMacroConfig(string $filePath = null): array|bool
+    function parseApacheMacroConfig(string $filePath = ""): array|bool
     {
         // Check if the file exists
         if (!file_exists($filePath)) {
@@ -90,7 +90,7 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function parseApacheMacroConfigLinear(string $filePath = "", array $keysArr = [])
+    function parseApacheMacroConfigLinear(string $filePath = "", array $keysArr = []): array|bool
     {
 
         if (!file_exists($filePath)) {

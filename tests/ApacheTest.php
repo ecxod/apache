@@ -81,7 +81,7 @@ EOD;
 
         $this->assertIsArray($result);
 
-        // // $this->assertCount(3, $result);
+        $this->assertCount(3, $result);
 
         // Check structure of the first row
         $this->assertArrayHasKey('KEY1', $result[0]);
