@@ -116,8 +116,6 @@ class Apache
 
         error_log("2arr[$keysCount]1 " . json_encode($lines));
 
-        $result = [];
-        $keys = [];
         $currentline = '';
 
         foreach ($lines as $index => $line) {
@@ -132,15 +130,15 @@ class Apache
             if (substr(string: $line, offset: -1) === '\\') {
                 $currentline = rtrim(string: $line, characters: '\\');
                 continue;
-            }else{
-                $currentline .= $line;
+            } else {
+                $currentline .= $line . " ";
             }
-            $lines[$index] = $currentline." ";
+            $lines[$index] = $currentline . " ";
         }
 
         error_log("21[$index] = " . strval($currentline));
 
 
-        return $result;
+        return explode(" " , $currentline);
     }
 }
