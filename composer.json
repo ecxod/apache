@@ -27,6 +27,8 @@
     "archive": {
         "exclude": [
             ".github",
+            ".vscode",
+            "tests/ApacheTest.php",
             "vendor"
         ]
     },
