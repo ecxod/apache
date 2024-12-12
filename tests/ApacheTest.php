@@ -37,9 +37,9 @@ KEY4 Value4
 EOD;
 
         file_put_contents($this->tempFile, $configContent);
+        error_log("1 ". strval($this->tempFile));
 
         $result =  $this->apache->parseApacheMacroConfig($this->tempFile);
-        error_log("1 ". json_encode($result) , 3, '/raid/home/christian/wdrive/ecxod/apache/log/error.log');
         error_log("1 ". json_encode($result));
 
         $this->assertIsArray($result);
@@ -78,17 +78,17 @@ VALUEc1    VALUEc2    VALUEcn
 EOD;
 
         file_put_contents($this->tempFile, $configContent);
+        error_log("2 ". strval($this->tempFile));
 
         $result = $this->apache->parseApacheMacroConfigLinear($this->tempFile);
 
-        error_log("2 ". json_encode($result) , 3, '/raid/home/christian/wdrive/ecxod/apache/log/error.log');
         error_log("2 ". json_encode($result));
 
         $this->assertIsArray($result);
 
         // // $this->assertCount(3, $result);
 
-        // // Check structure of the first row
+        // Check structure of the first row
         // // $this->assertArrayHasKey('KEY1', $result[1]);
         // // $this->assertArrayHasKey('KEY2', $result[1]);
         // // $this->assertArrayHasKey('KEYn', $result[1]);
