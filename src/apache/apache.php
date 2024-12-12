@@ -126,21 +126,25 @@ class Apache
 
             // Ignoriere Kommentare und leere Zeilen
             if (empty($line) || $line[0] === '#') {
-                $lines[$index]=null;
+                $lines[$index]="";
                 continue;
             }
-        }
-
-        error_log("2arr[$keysCount] ". json_encode($lines));
-
-        foreach ($lines as $index => $line) {
-
             if (substr(string: $line, offset: -1) === '\\') {
                 $lines[$index] = rtrim(string: $line, characters: '\\');
                 continue;
             }
-
         }
+
+        // error_log("2arr[$keysCount] ". json_encode($lines));
+
+        // foreach ($lines as $index => $line) {
+
+        //     if (substr(string: $line, offset: -1) === '\\') {
+        //         $lines[$index] = rtrim(string: $line, characters: '\\');
+        //         continue;
+        //     }
+
+        // }
 
         error_log("2arr[$keysCount] ". json_encode($lines));
 
