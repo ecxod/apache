@@ -2,8 +2,8 @@
 
 namespace Ecxod\Tests;
 
-use \Ecxod\Apache\Apache;
-use \PHPUnit\Framework\TestCase;
+use Ecxod\Apache\Apache;
+use PHPUnit\Framework\TestCase;
 
 
 class ApacheTest extends TestCase
@@ -100,16 +100,10 @@ EOD;
         $this->assertEquals('VALUEcn', $result[2]['KEYn']);
     }
     
-
-
-
-
-
-
     public function testParseApacheMacroConfigLinearWithNonExistentFile(): void
     {
         $this->expectException(\Error::class);
-        $this->apache->parseApacheMacroConfigLinear('non_existent_file.txt');
+        $this->apache->parseApacheMacroConfigLinear('non_existent_file_linear.txt');
     }
 
     public function testParseApacheMacroConfigLinearWithEmptyFilePath(): void
