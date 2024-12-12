@@ -92,6 +92,7 @@ class Apache
     function parseApacheMacroConfigLinear(string $filePath = "", array $keysArr = []): array|bool
     {
 
+        $currentline = '';
         if (empty($filePath)) {
             error_log("Error: Configuration file not set or empty.");
             return false;
@@ -117,7 +118,7 @@ class Apache
             }
 
             // Behandle Zeilenumbrüche mit "\"
-            $currentline = '';
+            
             if (substr(string: $line, offset: -1) === '\\') {
                 $currentline = rtrim(string: $line, characters: '\\');
                 continue;
