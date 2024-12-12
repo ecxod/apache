@@ -91,8 +91,10 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function parseApacheMacroConfigLinear(string $filePath = "")
+    function parseApacheMacroConfigLinear(string $filePath = "",array $keysArr=[])
     {
+
+
         if (!file_exists($filePath)) {
             error_log("Error: Configuration File '$filePath' does not exist.");
             echo "Configuration file not found. Check the error log for details.";
@@ -101,12 +103,21 @@ class Apache
             error_log("Error: Variable \$filePath' is empty.");
             echo "Configuration file unknown. Check the error log for details.";
             return false;
+        }elseif(empty($keysArr)){
+            error_log("Error: Variable \$keys' is empty.");
+            echo "Configuration file unknown. Check the error log for details.";
+            return false; 
         }
+
+        $keysCount = count($keysArr);
 
         $content = file_get_contents($filePath);
         $lines = array_filter(array_map('trim', explode("\n", $content)));
 
-        error_log("2arr ". json_encode($lines));
+        error_log("2arr[$keysCount] ". json_encode($lines));
+
+
+
 
         $result = [];
         $keys = [];
@@ -114,22 +125,19 @@ class Apache
 
         foreach ($lines as $index => $line) {
 
-            $currentline = '';
-
-            $line = trim($line);
+            $line=trim(strval($line));
 
             // Ignoriere Kommentare und leere Zeilen
             if (empty($line) || $line[0] === '#') {
-                $index = $index -1 ;
                 continue;
             }
-
-
 
             if (substr(string: $line, offset: -1) === '\\') {
-                $currentline .= rtrim(string: $line, characters: '\\');
+                $line .= rtrim(string: $line, characters: '\\');
                 continue;
             }
+
+            $lineArr = preg_split('/\s+/', $line);
 
             error_log("21[$index]currentline ". strval($currentline));
 
