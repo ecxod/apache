@@ -114,7 +114,7 @@ class Apache
         $content = file_get_contents($filePath);
         $lines = array_filter(array_map('trim', explode("\n", $content)));
 
-        error_log("2arr[$keysCount] " . json_encode($lines));
+        error_log("2arr[$keysCount]1 " . json_encode($lines));
 
         $result = [];
         $keys = [];
@@ -130,7 +130,7 @@ class Apache
                 continue;
             }
             if (substr(string: $line, offset: -1) === '\\') {
-                $currentline = trim(rtrim(string: $line, characters: '\\'));
+                $currentline = rtrim(string: $line, characters: '\\');
                 continue;
             }else{
                 $currentline .= $line;
@@ -138,39 +138,27 @@ class Apache
             $lines[$index] = $currentline;
         }
 
-        // error_log("2arr[$keysCount] ". json_encode($lines));
-
-        // foreach ($lines as $index => $line) {
-
-        //     if (substr(string: $line, offset: -1) === '\\') {
-        //         $lines[$index] = rtrim(string: $line, characters: '\\');
-        //         continue;
-        //     }
-
-        // }
-
-        error_log("2arr[$keysCount] " . json_encode($lines));
 
         foreach ($lines as $index => $line) {
 
-            $lineArr = preg_split('/\s+/', $line);
+            //$lineArr = preg_split('/\s+/', $line);
 
             error_log("21[$index]currentline " . strval($currentline));
 
-            $currentline ?? $line;
+            // $currentline ?? $line;
 
-            error_log("22[$index]line " . strval($line));
+            // error_log("22[$index]line " . strval($line));
 
 
 
-            if ($index === 0) {
-                $keys = preg_split('/\s+/', $currentline);
-            } else {
-                $values = preg_split('/\s+/', $currentline);
-                if (count($values) === count($keys)) {
-                    $result[] = array_combine($keys, $values);
-                }
-            }
+            // if ($index === 0) {
+            //     $keys = preg_split('/\s+/', $currentline);
+            // } else {
+            //     $values = preg_split('/\s+/', $currentline);
+            //     if (count($values) === count($keys)) {
+            //         $result[] = array_combine($keys, $values);
+            //     }
+            // }
         }
 
         return $result;
