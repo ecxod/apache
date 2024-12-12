@@ -2,6 +2,7 @@
 
 namespace Ecxod\Tests;
 
+use \Ecxod\Apache\Apache;
 use \PHPUnit\Framework\TestCase;
 
 
@@ -9,9 +10,12 @@ class ApacheTest extends TestCase
 {
     private $tempFile;
 
+    private $apache;
+
     protected function setUp(): void
     {
         $this->tempFile = tempnam(sys_get_temp_dir(), 'apache_config_');
+        $this->apache = new Apache;
     }
 
     protected function tearDown(): void
@@ -21,7 +25,7 @@ class ApacheTest extends TestCase
         }
     }
 
-    public function parseApacheMacroConfig()
+    public function testParseApacheMacroConfig(): void
     {
         $configContent = <<<EOD
 # This is a comment
@@ -34,7 +38,7 @@ EOD;
 
         file_put_contents($this->tempFile, $configContent);
 
-        $result = parseApacheMacroConfig($this->tempFile);
+        $result =  $this->apache->parseApacheMacroConfig($this->tempFile);
 
         $this->assertIsArray($result);
         $this->assertCount(4, $result);
@@ -44,15 +48,75 @@ EOD;
         $this->assertEquals('Value4', $result['KEY4']);
     }
 
-    public function testParseApacheMacroConfigWithNonExistentFile()
+    public function testParseApacheMacroConfigWithNonExistentFile(): void
     {
         $this->expectException(\Error::class);
-        parseApacheMacroConfig('non_existent_file.txt');
+        $this->apache->parseApacheMacroConfig('non_existent_file.txt');
     }
 
-    public function testParseApacheMacroConfigWithEmptyFilePath()
+    public function testParseApacheMacroConfigWithEmptyFilePath(): void
     {
         $this->expectException(\Error::class);
-        parseApacheMacroConfig('');
+        $this->apache->parseApacheMacroConfig('');
     }
+
+
+
+
+
+    public function testParseApacheMacroConfigLinear(): void
+    {
+        $configContent = <<<EOD
+# This is a comment
+KEY1          KEY2           KEYn
+VALUEa1    VALUEa2    VALUEan
+VALUEb1    VALUEb2    VALUEbn
+VALUEc1    VALUEc2    VALUEcn
+EOD;
+    
+        file_put_contents($this->tempFile, $configContent);
+    
+        $result = $this->apache->parseApacheMacroConfigLinear($this->tempFile);
+    
+        $this->assertIsArray($result);
+        $this->assertCount(3, $result);
+    
+        // Check structure of the first row
+        $this->assertArrayHasKey('KEY1', $result[0]);
+        $this->assertArrayHasKey('KEY2', $result[0]);
+        $this->assertArrayHasKey('KEYn', $result[0]);
+    
+        // Check values of each row
+        $this->assertEquals('VALUEa1', $result[0]['KEY1']);
+        $this->assertEquals('VALUEa2', $result[0]['KEY2']);
+        $this->assertEquals('VALUEan', $result[0]['KEYn']);
+    
+        $this->assertEquals('VALUEb1', $result[1]['KEY1']);
+        $this->assertEquals('VALUEb2', $result[1]['KEY2']);
+        $this->assertEquals('VALUEbn', $result[1]['KEYn']);
+    
+        $this->assertEquals('VALUEc1', $result[2]['KEY1']);
+        $this->assertEquals('VALUEc2', $result[2]['KEY2']);
+        $this->assertEquals('VALUEcn', $result[2]['KEYn']);
+    }
+    
+
+
+
+
+
+
+    public function testParseApacheMacroConfigLinearWithNonExistentFile(): void
+    {
+        $this->expectException(\Error::class);
+        $this->apache->parseApacheMacroConfigLinear('non_existent_file.txt');
+    }
+
+    public function testParseApacheMacroConfigLinearWithEmptyFilePath(): void
+    {
+        $this->expectException(\Error::class);
+        $this->apache->parseApacheMacroConfigLinear('');
+    }
+
+
 }
