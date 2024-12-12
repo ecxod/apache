@@ -74,47 +74,45 @@ VALUEa1    VALUEa2    VALUEan
 VALUEb1    VALUEb2    VALUEbn
 VALUEc1    VALUEc2    VALUEcn
 EOD;
-    
+
         file_put_contents($this->tempFile, $configContent);
-    
+
         $result = $this->apache->parseApacheMacroConfigLinear($this->tempFile);
 
-        error_log(var_export($result),3,'/raid/home/christian/wdrive/ecxod/apache/log/error.log');
-    
+        error_log(var_export($result) ?? '****', 3, '/raid/home/christian/wdrive/ecxod/apache/log/error.log');
+
         $this->assertIsArray($result);
-        
+
         // // $this->assertCount(3, $result);
-    
+
         // // Check structure of the first row
         // // $this->assertArrayHasKey('KEY1', $result[1]);
         // // $this->assertArrayHasKey('KEY2', $result[1]);
         // // $this->assertArrayHasKey('KEYn', $result[1]);
-    
+
         // // Check values of each row
         // $this->assertEquals('VALUEa1', $result[1]['KEY1']);
         // $this->assertEquals('VALUEa2', $result[1]['KEY2']);
         // $this->assertEquals('VALUEan', $result[1]['KEYn']);
-    
+
         // $this->assertEquals('VALUEb1', $result[2]['KEY1']);
         // $this->assertEquals('VALUEb2', $result[2]['KEY2']);
         // $this->assertEquals('VALUEbn', $result[2]['KEYn']);
-    
+
         // $this->assertEquals('VALUEc1', $result[3]['KEY1']);
         // $this->assertEquals('VALUEc2', $result[3]['KEY2']);
         // $this->assertEquals('VALUEcn', $result[3]['KEYn']);
     }
-    
+
     public function testParseApacheMacroConfigLinear_WithNonExistentFile(): void
     {
-        $result =$this->apache->parseApacheMacroConfigLinear('non_existent_file_linear.txt');
+        $result = $this->apache->parseApacheMacroConfigLinear('non_existent_file_linear.txt');
         $this->assertFalse($result);
     }
 
     public function testParseApacheMacroConfigLinear_WithEmptyFilePath(): void
     {
-        $result =$this->apache->parseApacheMacroConfigLinear('');
+        $result = $this->apache->parseApacheMacroConfigLinear('');
         $this->assertFalse($result);
     }
-
-
 }
