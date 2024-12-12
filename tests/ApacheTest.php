@@ -39,6 +39,7 @@ EOD;
         file_put_contents($this->tempFile, $configContent);
 
         $result =  $this->apache->parseApacheMacroConfig($this->tempFile);
+        error_log("1 ". json_encode($result) , 3, '/raid/home/christian/wdrive/ecxod/apache/log/error.log');
 
         $this->assertIsArray($result);
         $this->assertCount(4, $result);
@@ -79,7 +80,7 @@ EOD;
 
         $result = $this->apache->parseApacheMacroConfigLinear($this->tempFile);
 
-        error_log( strval(var_export($result)) , 3, '/raid/home/christian/wdrive/ecxod/apache/log/error.log');
+        error_log("2 ". json_encode($result) , 3, '/raid/home/christian/wdrive/ecxod/apache/log/error.log');
 
         $this->assertIsArray($result);
 
