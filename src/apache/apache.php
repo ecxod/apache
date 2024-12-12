@@ -110,6 +110,9 @@ class Apache
         $currentline = '';
 
         foreach ($lines as $index => $line) {
+
+            $currentline = '';
+
             $line = trim($line);
 
             // Ignoriere Kommentare und leere Zeilen
@@ -118,17 +121,21 @@ class Apache
                 continue;
             }
 
+
+
             if (substr(string: $line, offset: -1) === '\\') {
                 $currentline .= rtrim(string: $line, characters: '\\');
                 continue;
             }
 
+            error_log("21[$index]currentline ". strval($currentline));
 
-            error_log("2[$index]line ". strval($line));
+            $currentline ?? $line;
 
-            $currentline = $line;
+            error_log("22[$index]line ". strval($line));
 
-            error_log("2[$index]currentline ". strval($currentline));
+            error_log("23[$index]currentline ". strval($currentline));
+
 
             if ($index === 0) {
                 $keys = preg_split('/\s+/', $currentline);
