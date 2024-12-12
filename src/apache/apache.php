@@ -105,6 +105,9 @@ class Apache
 
         $content = file_get_contents($filePath);
         $lines = array_filter(array_map('trim', explode("\n", $content)));
+
+        error_log("2arr ". json_encode($lines));
+
         $result = [];
         $keys = [];
         $currentline = '';
@@ -117,7 +120,7 @@ class Apache
 
             // Ignoriere Kommentare und leere Zeilen
             if (empty($line) || $line[0] === '#') {
-                $index-- ;
+                $index = $index -1 ;
                 continue;
             }
 
