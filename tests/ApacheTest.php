@@ -37,11 +37,7 @@ KEY4 Value4
 EOD;
 
         file_put_contents($this->tempFile, $configContent);
-        error_log("1 ". strval($this->tempFile));
-        error_log("1 ". strval(file_get_contents($this->tempFile)));
-
         $result =  $this->apache->parseApacheMacroConfig($this->tempFile);
-        error_log("1 ". json_encode($result));
 
         $this->assertIsArray($result);
         $this->assertCount(4, $result);

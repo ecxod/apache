@@ -41,7 +41,6 @@ class Apache
         $content = file_get_contents(filename: $filePath);
         $lines = explode(separator: "\n", string: $content);
         $result = [];
-        $currentKey = '';
         $currentValue = '';
 
         foreach ($lines as $line) {
