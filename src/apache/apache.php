@@ -130,11 +130,11 @@ class Apache
             }
 
 
-            error_log("2line ". strval($line));
+            error_log("2[$index]line ". strval($line));
 
             $currentline .= $line;
 
-            error_log("2currentline ". strval($currentline));
+            error_log("2[$index]currentline ". strval($currentline));
 
             if ($index === 0) {
                 $keys = preg_split('/\s+/', $currentline);
