@@ -137,8 +137,10 @@ class Apache
         }
 
         error_log("21[$index] = " . strval($currentline));
+        //$currentArr = array_filter(explode(" " , $currentline), fn($value) => $value !== "");
+        $currentArr = array_filter(preg_split('/\s+/', $currentline), fn($value) => $value !== "");
 
-
-        return explode(" " , $currentline);
+        return  $currentArr;
     }
 }
+
