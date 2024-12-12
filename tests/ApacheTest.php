@@ -52,14 +52,14 @@ EOD;
     {
         $this->expectException(\Error::class);
         $this->apache->parseApacheMacroConfig('non_existent_file.txt');
-        $this->assertTrue(false);
+        $this->assertFalse(true);
     }
 
     public function testParseApacheMacroConfig_WithEmptyFilePath(): void
     {
         $this->expectException(\Error::class);
         $this->apache->parseApacheMacroConfig('');
-        $this->assertTrue(false);
+        $this->assertFalse(true);
     }
 
 
@@ -106,14 +106,14 @@ EOD;
     {
         $this->expectException(\Error::class);
         $this->apache->parseApacheMacroConfigLinear('non_existent_file_linear.txt');
-        $this->assertTrue(false);
+        $this->assertFalse(true);
     }
 
     public function testParseApacheMacroConfigLinear_WithEmptyFilePath(): void
     {
         $this->expectException(\Error::class);
         $this->apache->parseApacheMacroConfigLinear('');
-        $this->assertTrue(false);
+        $this->assertFalse(true);
     }
 
 
