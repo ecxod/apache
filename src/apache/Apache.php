@@ -70,7 +70,6 @@ class Apache
                     preg_match(pattern: '/^(\s*)\#(\s*)/', subject: $line)
             ) {
                 unset($lines[$index]);
-                //$lines[$index] = null;
                 continue;
             }
 
@@ -81,6 +80,8 @@ class Apache
             } else {
                 $currentline = "$line ";
             }
+
+            echo  $currentline;
 
             if (!empty($currentline)) {
                 $data[] = str_getcsv(
