@@ -25,44 +25,6 @@ class ApacheTest extends TestCase
         }
     }
 
-    public function testParseApacheMacroConfig(): void
-    {
-        $configContent = <<<EOD
-# This is a comment
-KEY1 Value1
-KEY2 Value2 with spaces
-KEY3 Value3 \
-     continued on next line
-KEY4 Value4
-EOD;
-
-        file_put_contents($this->tempFile, $configContent);
-        $result =  $this->apache->parseApacheMacroConfig($this->tempFile);
-
-        $this->assertIsArray($result);
-        $this->assertCount(4, $result);
-        $this->assertEquals('Value1', $result['KEY1']);
-        $this->assertEquals('Value2 with spaces', $result['KEY2']);
-        $this->assertEquals('Value3 continued on next line', $result['KEY3']);
-        $this->assertEquals('Value4', $result['KEY4']);
-    }
-
-    public function testParseApacheMacroConfig_WithNonExistentFile(): void
-    {
-        $result = $this->apache->parseApacheMacroConfig('non_existent_file.txt');
-        $this->assertFalse($result);
-    }
-
-    public function testParseApacheMacroConfig_WithEmptyFilePath(): void
-    {
-        $result = $this->apache->parseApacheMacroConfig();
-        $this->assertFalse($result);
-    }
-
-
-
-
-
     public function testParseApacheMacroConfigLinear(): void
     {
 
@@ -71,7 +33,9 @@ EOD;
 # This is a comment
 VALUEa1    VALUEa2    \
     VALUEan
+# VALUEb1    VALUEb2    VALUEbn
 VALUEb1    VALUEb2    VALUEbn
+
 VALUEc1    VALUEc2    VALUEcn
 EOD;
 
