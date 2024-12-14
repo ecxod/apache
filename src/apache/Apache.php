@@ -76,7 +76,14 @@ class Apache
                 $currentline = "$line ";
             }
 
-            if (!empty($currentline)) $data[] = str_getcsv(string: $currentline, separator: $this->separator, enclosure: $this->enclosure, escape: $this->escape);
+            if (!empty($currentline)) {
+                $data[] = str_getcsv(
+                    string: $currentline,
+                    separator: $this->separator,
+                    enclosure: $this->enclosure,
+                    escape: $this->escape
+                );
+            }
         }
 
         return  $data;
