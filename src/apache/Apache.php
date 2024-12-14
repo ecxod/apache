@@ -76,12 +76,12 @@ class Apache
             // Behandle Zeilenumbrüche mit "\"
             if (substr(string: $line, offset: -1) === $this->escape) {
                 $currentline = rtrim(string: $line, characters: $this->escape);
+                $currentline = str_replace(",,",",",$currentline);
                 continue;
             } else {
                 $currentline = "$line ";
             }
 
-            $currentline = str_replace(",,",",",$currentline);
             echo  $currentline .PHP_EOL;
 
             if (!empty($currentline)) {
