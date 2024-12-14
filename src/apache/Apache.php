@@ -81,7 +81,7 @@ class Apache
                 $currentline = "$line ";
             }
 
-            echo  $currentline;
+            echo  $currentline .PHP_EOL;
 
             if (!empty($currentline)) {
                 $data[] = str_getcsv(
