@@ -43,7 +43,6 @@ EOD;
         $result = $this->apache->parseApacheMacroConfigLinear(filePath: $this->tempFile,keysArr: $keysArr);
 
         $this->assertIsArray($result);
-
         $this->assertCount(3, $result);
 
         // Check values of each row
