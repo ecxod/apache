@@ -13,12 +13,14 @@ class Apache
     public $escape;
     public $enclosure;
     public $separator;
+    public $dblseparator;
 
     function __construct()
     {
         $this->escape = "\\";
         $this->enclosure = "\'";
         $this->separator = ",";
+        $this->dblseparator = ",,";
     }
 
     /**
@@ -57,6 +59,7 @@ class Apache
         $content = file_get_contents(filename: $filePath);
         $content = preg_replace(pattern: '/\s{2,}/', replacement: $this->separator, subject: $content);
         $content = str_replace(search: $this->escape, replace: "", subject: $content);
+        $content = preg_replace(pattern: $this->dblseparator, replacement: $this->separator, subject: $content);
         $lines = array_filter(array: array_map(callback: 'trim', array: explode(separator: PHP_EOL, string: $content)));
 
         foreach ($lines as $index => $line) {
