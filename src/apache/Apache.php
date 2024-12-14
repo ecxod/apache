@@ -59,7 +59,9 @@ class Apache
         $content = str_replace(search: $this->escape, replace: "", subject: $content);
         $lines = array_filter(array: array_map(callback: 'trim', array: explode(separator: PHP_EOL, string: $content)));
 
+        $keyIndex = 0; 
         foreach ($lines as $index => $line) {
+            
 
             $line = trim(string: strval(value: $line));
 
@@ -80,12 +82,13 @@ class Apache
             } else {
                 $currentline = "$line ";
                 $currentline = str_replace(",,",",",$currentline);
+                $key = $keysArr[$keyIndex];
             }
 
-            print  $currentline;
+            print  "debug[$index] $currentline" . PHP_EOL;
 
             if (!empty($currentline)) {
-                $data[] = str_getcsv(
+                $data[$key] = str_getcsv(
                     string: $currentline,
                     separator: $this->separator,
                     enclosure: $this->enclosure,
