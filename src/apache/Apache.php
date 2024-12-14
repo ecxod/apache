@@ -22,14 +22,8 @@ class Apache
     }
 
     /**
-     * liest eine Apache2 Macro-Konfigurationsdatei ein.  
-     * Diese Funktion liest die durch Leerzeichen getrennten Variablen und der möglichen Zeilenumbrüche mit "\".  
-     * Beispielzeile :  
-     * \# This is a comment  
-     * VALUEa1    VALUEa2    \  
-     *               VALUEan  
-     * VALUEb1    VALUEb2    VALUEbn  
-     * VALUEc1    VALUEc2    VALUEcn  
+     * liest eine Apache2 Macro-Konfigurationsdatei ein, die durch Leerzeichen getrennten Variablen  
+     * und der möglichen Zeilenumbrüche ("\") enthält.  
      * 
      * @param string $filePath - Apache2 Macro-Konfigurationsdatei 
      * @param array $keysArr -  zB. ["KEY1", "KEY2", "KEYn"];
@@ -59,16 +53,16 @@ class Apache
         $content = str_replace(search: $this->escape, replace: "", subject: $content);
         $lines = array_filter(array: array_map(callback: 'trim', array: explode(separator: PHP_EOL, string: $content)));
 
-        $keyIndex = 0; 
+        $keyIndex = 0;
         foreach ($lines as $index => $line) {
-            
+
             $line = trim(string: strval(value: $line));
 
             // Ignoriere Kommentare und leere Zeilen
             if (
-                    empty($line) || 
-                    preg_match(pattern: '/^(\s*)$/', subject: $line) || 
-                    preg_match(pattern: '/^(\s*)\#(\s*)/', subject: $line)
+                empty($line) ||
+                preg_match(pattern: '/^(\s*)$/', subject: $line) ||
+                preg_match(pattern: '/^(\s*)\#(\s*)/', subject: $line)
             ) {
                 unset($lines[$index]);
                 continue;
@@ -79,21 +73,22 @@ class Apache
                 $currentline = rtrim(string: $line, characters: $this->escape);
                 continue;
             } else {
-                $currentline = str_replace(",,",",",$line);
+                $currentline = str_replace(search: ",,", replace: ",", subject: $line);
             }
 
             if (!empty($currentline)) {
-                $data = str_getcsv(
-                    string: $currentline,
-                    separator: $this->separator,
-                    enclosure: $this->enclosure,
-                    escape: $this->escape
+                $result[] = array_combine(
+                    keys: $keysArr,
+                    values: str_getcsv(
+                        string: $currentline,
+                        separator: $this->separator,
+                        enclosure: $this->enclosure,
+                        escape: $this->escape
+                    )
                 );
-                $result[] = array_combine($keysArr, $data);
             }
         }
 
-        print_r($result);
         return  $result;
     }
 }

@@ -14,7 +14,7 @@ Most existing solutions focus on parsing .ini files or other common configuratio
 
 The function fas the following capabilities:
  - ignoring comment lines starting with #
- -  can handle tabs and multiple spaces as separator
+ - can handle tabs and multiple spaces as separator
 
 
 ```sh
@@ -32,8 +32,6 @@ VALUEb1    VALUEb2    VALUEbn
 VALUEc1    VALUEc2    VALUEcn
 ```
 
-
-
 Use Case : 
 ```php
 use Ecxod/Apache;
@@ -48,5 +46,30 @@ $result = parseApacheMacroConfigLinear($configPath);
 
 print_r($result);
 
+```
+result ölooks like this
+
+```txt
+ Array
+(
+    [0] => Array
+        (
+            [KEY1] => VALUEa1
+            [KEY2] => VALUEa2
+            [KEYn] => VALUEan
+        )
+    [1] => Array
+        (
+            [KEY1] => VALUEb1
+            [KEY2] => VALUEb2
+            [KEYn] => VALUEbn
+        )
+    [2] => Array
+        (
+            [KEY1] => VALUEc1
+            [KEY2] => VALUEc2
+            [KEYn] => VALUEcn
+        )
+)
 ```
 
