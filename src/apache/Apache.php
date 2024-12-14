@@ -82,7 +82,7 @@ class Apache
                 $currentline = str_replace(",,",",",$currentline);
             }
 
-            echo  $currentline;
+            print  $currentline;
 
             if (!empty($currentline)) {
                 $data[] = str_getcsv(
@@ -95,6 +95,7 @@ class Apache
         }
 
         print_r($lines);
+        print_r($data);
 
         return  $data;
     }
