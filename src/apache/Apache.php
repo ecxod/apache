@@ -95,7 +95,6 @@ class Apache
             }
         }
 
-        print_r($data);
         print_r($result);
 
         return  $data;

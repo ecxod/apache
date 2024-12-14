@@ -46,11 +46,6 @@ EOD;
 
         $this->assertCount(3, $result);
 
-        // Check structure of the first row
-        $this->assertArrayHasKey('KEY1', $result[0]);
-        $this->assertArrayHasKey('KEY2', $result[0]);
-        $this->assertArrayHasKey('KEYn', $result[0]);
-
         // Check values of each row
         $this->assertEquals('VALUEa1', $result[0]['KEY1']);
         $this->assertEquals('VALUEa2', $result[0]['KEY2']);
