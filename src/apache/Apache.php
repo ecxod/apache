@@ -64,7 +64,11 @@ class Apache
             $line = trim(string: strval(value: $line));
 
             // Ignoriere Kommentare und leere Zeilen
-            if (empty($line) || preg_match(pattern: '/^(\s*)\#(\s*)/', subject: $line)) {
+            if (
+                    empty($line) || 
+                    preg_match(pattern: '/^(\s*)$/', subject: $line) || 
+                    preg_match(pattern: '/^(\s*)\#(\s*)/', subject: $line)
+            ) {
                 continue;
             }
 
