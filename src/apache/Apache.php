@@ -85,16 +85,18 @@ class Apache
             print  "debug[$index] $currentline" . PHP_EOL;
 
             if (!empty($currentline)) {
-                $data[] = str_getcsv(
+                $data = str_getcsv(
                     string: $currentline,
                     separator: $this->separator,
                     enclosure: $this->enclosure,
                     escape: $this->escape
                 );
+                $result[] = array_combine($keysArr, $data);
             }
         }
 
         print_r($data);
+        print_r($result);
 
         return  $data;
     }
