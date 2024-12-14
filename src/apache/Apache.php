@@ -70,7 +70,7 @@ class Apache
                     preg_match(pattern: '/^(\s*)\#(\s*)/', subject: $line)
             ) {
                 //unset($lines[$index]);
-                $lines[$index] = null;
+                //$lines[$index] = null;
                 continue;
             }
 
