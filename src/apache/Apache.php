@@ -79,9 +79,7 @@ class Apache
                 $currentline = rtrim(string: $line, characters: $this->escape);
                 continue;
             } else {
-                $currentline = "$line ";
-                $currentline = str_replace(",,",",",$currentline);
-                // $key = $keysArr[$keyIndex];
+                $currentline = str_replace(",,",",",$line);
             }
 
             print  "debug[$index] $currentline" . PHP_EOL;
@@ -96,7 +94,6 @@ class Apache
             }
         }
 
-        print_r($lines);
         print_r($data);
 
         return  $data;
