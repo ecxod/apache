@@ -9,6 +9,18 @@ namespace Ecxod\Apache;
  */
 class Apache
 {
+
+    public $escape;
+    public $enclosure;
+    public $separator;
+
+    function __construct()
+    {
+        $this->escape = "\\";
+        $this->enclosure = "\'";
+        $this->separator = ",";
+    }
+
     /**
      * liest eine Apache2 Macro-Konfigurationsdatei mit PHP ein.
      * Diese Funktion liest die durch Leerzeichen getrennten Variablen und der möglichen Zeilenumbrüche mit "\".
@@ -37,21 +49,21 @@ class Apache
         }
 
         $content = file_get_contents(filename: $filePath);
-        $lines = explode(separator: "\n", string: $content);
+        $lines = explode(separator: PHP_EOL, string: $content);
         $result = [];
         $currentValue = '';
 
         foreach ($lines as $line) {
-            $line = trim($line);
+            $line = trim(strval($line));
 
             // Ignoriere Kommentare und leere Zeilen
-            if (empty($line) || $line[0] === '#') {
+            if (empty($line) || preg_match('/^(\s+)\#/',$line)) {
                 continue;
             }
 
             // Behandle Zeilenumbrüche mit "\"
-            if (substr(string: $line, offset: -1) === '\\') {
-                $currentValue .= rtrim(string: $line, characters: '\\');
+            if (substr(string: $line, offset: -1) === $this->escape) {
+                $currentValue .= rtrim(string: $line, characters: $this->escape);
                 continue;
             }
 
@@ -104,38 +116,35 @@ class Apache
             return false;
         }
 
-        $content = file_get_contents($filePath);
-        preg_match_all('/^\s*Use\s+SSLHost.*$/m', $content, $matches);
-        $sslHostLines = $matches[0];
+        $content = file_get_contents(filename: $filePath);
+        $content = preg_replace(pattern: '/\s{2,}/', replacement: $this->separator, subject: $content);
+        $content = str_replace(search: $this->escape ,replace: "  ", subject: $content);
+        $lines = array_filter(array: array_map(callback: 'trim', array: explode( separator: PHP_EOL, string: $content)));
 
-        $lines = array_filter(array_map('trim', explode("\n", $content)));
 
         foreach ($lines as $index => $line) {
 
-            $line = trim(strval($line));
+            $line = trim(string: strval(value: $line));
 
             // Ignoriere Kommentare und leere Zeilen
-            if (empty($line) || $line[0] === '#') {
-                $lines[$index] = "";
+            if (empty($line) || preg_match(pattern: '/^(\s*)\#(\s*)/',subject: $line)) {
                 continue;
             }
 
             // Behandle Zeilenumbrüche mit "\"
-            if (substr(string: $line, offset: -1) === '\\') {
-                $currentline = rtrim(string: $line, characters: '\\');
+            if (substr(string: $line, offset: -1) === $this->escape) {
+                $currentline = rtrim(string: $line, characters: $this->escape);
                 continue;
-            } else {
-                $currentline .= "$line ";
+            } 
+            else {
+                $currentline = "$line ";
             }
             $lines[$index] = "$currentline ";
+
+            if(!empty($currentline)) $data[] = str_getcsv(string: $currentline, separator: $this->separator, enclosure: $this->enclosure, escape: $this->escape);
         }
 
-        $valsArr = array_filter(preg_split('/\s+/', $currentline), fn ($value) => $value !== "");
 
-        $result = array_map(function ($chunk) use ($keysArr) {
-            return array_combine($keysArr, $chunk);
-        }, array_chunk($valsArr, count($keysArr)));
-
-        return  $result;
+        return  $data;
     }
 }
