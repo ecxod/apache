@@ -69,6 +69,7 @@ class Apache
                     preg_match(pattern: '/^(\s*)$/', subject: $line) || 
                     preg_match(pattern: '/^(\s*)\#(\s*)/', subject: $line)
             ) {
+                unset($lines[$index]);
                 continue;
             }
 
