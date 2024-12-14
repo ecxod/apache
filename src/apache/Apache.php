@@ -82,8 +82,6 @@ class Apache
                 $currentline = str_replace(",,",",",$line);
             }
 
-            print  "debug[$index] $currentline" . PHP_EOL;
-
             if (!empty($currentline)) {
                 $data = str_getcsv(
                     string: $currentline,
@@ -94,8 +92,6 @@ class Apache
                 $result[] = array_combine($keysArr, $data);
             }
         }
-
-        print_r($result);
 
         return  $result;
     }
