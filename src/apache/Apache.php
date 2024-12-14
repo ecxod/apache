@@ -91,6 +91,8 @@ class Apache
             }
         }
 
+        print_r($lines);
+
         return  $data;
     }
 }
