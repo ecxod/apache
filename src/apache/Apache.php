@@ -56,7 +56,7 @@ class Apache
 
         $content = file_get_contents(filename: $filePath);
         $content = preg_replace(pattern: '/\s{2,}/', replacement: $this->separator, subject: $content);
-        $content = str_replace(search: $this->escape, replace: "  ", subject: $content);
+        $content = str_replace(search: $this->escape, replace: "", subject: $content);
         $lines = array_filter(array: array_map(callback: 'trim', array: explode(separator: PHP_EOL, string: $content)));
 
         foreach ($lines as $index => $line) {
