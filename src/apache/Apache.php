@@ -93,6 +93,7 @@ class Apache
             }
         }
 
+        print_r($result);
         return  $result;
     }
 }

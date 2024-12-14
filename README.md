@@ -16,18 +16,37 @@ The function fas the following capabilities:
  - ignoring comment lines starting with #
  -  can handle tabs and multiple spaces as separator
 
-Use Case : 
 
+```sh
+cat /etc/apache2/sites-enabled/001-SSLHost.conf
+```
+that may look like this : 
+```txt
+# KEY1  KEY2  KEYn
+#
+# This is a comment
+# Next line is wrapped with the character "\"
+VALUEa1    VALUEa2    \
+    VALUEan
+VALUEb1    VALUEb2    VALUEbn
+VALUEc1    VALUEc2    VALUEcn
+```
+
+
+
+Use Case : 
 ```php
 use Ecxod/Apache;
+
+# This are the Keys
+$keysArr = ["KEY1", "KEY2", "KEYn"];
 
 # This is the config file you want to parse
 $configPath = '/etc/apache2/sites-enabled/001-SSLHost.conf';
 
-$config = parseApacheMacroConfigLinear($configPath);
+$result = parseApacheMacroConfigLinear($configPath);
 
-foreach ($config as $key => $value) {
-    echo "$key: $value\n";
-}
+print_r($result);
 
 ```
+
