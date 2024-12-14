@@ -6,7 +6,7 @@
     "license": "MIT",
     "autoload": {
         "files": [
-            "src/apache/apache.php",
+            "src/apache/Apache.php",
             "tests/ApacheTest.php"
         ],
         "psr-4": {
