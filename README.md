@@ -22,9 +22,9 @@ Use Case :
 use Ecxod/Apache;
 
 # This is the config file you want to parse
-$configPath = '/pfad/zur/apache/macro/config.conf';
+$configPath = '/etc/apache2/sites-enabled/001-SSLHost.conf';
 
-$config = parseApacheMacroConfig($configPath);
+$config = parseApacheMacroConfigLinear($configPath);
 
 foreach ($config as $key => $value) {
     echo "$key: $value\n";
