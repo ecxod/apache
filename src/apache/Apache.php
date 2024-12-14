@@ -62,7 +62,6 @@ class Apache
         $keyIndex = 0; 
         foreach ($lines as $index => $line) {
             
-
             $line = trim(string: strval(value: $line));
 
             // Ignoriere Kommentare und leere Zeilen
@@ -82,13 +81,13 @@ class Apache
             } else {
                 $currentline = "$line ";
                 $currentline = str_replace(",,",",",$currentline);
-                $key = $keysArr[$keyIndex];
+                // $key = $keysArr[$keyIndex];
             }
 
             print  "debug[$index] $currentline" . PHP_EOL;
 
             if (!empty($currentline)) {
-                $data[$key] = str_getcsv(
+                $data[] = str_getcsv(
                     string: $currentline,
                     separator: $this->separator,
                     enclosure: $this->enclosure,
