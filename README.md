@@ -12,18 +12,17 @@ php composer.phar require ecxod/apache
 I found no specific library for parsing Apache Macro configuration files.  
 Most existing solutions focus on parsing .ini files or other common configuration formats.
 
-The function fas the following capabilities:
- - ignoring comment lines starting with #
+The function *parseApacheMacroConfigLinear* fas the following capabilities:
+ - ignoring comment lines starting with a "#" like : /(\s*)\\#(\s*)/
  - can handle tabs and multiple spaces as separator
+ - can handle wrapped lines with backslash in shell-style mode such as: "\\"
 
-
+Let's admit the following config file
 ```sh
 cat /etc/apache2/sites-enabled/001-SSLHost.conf
 ```
 that may look like this : 
 ```txt
-# KEY1  KEY2  KEYn
-#
 # This is a comment
 # Next line is wrapped with the character "\"
 VALUEa1    VALUEa2    \
@@ -34,15 +33,16 @@ VALUEc1    VALUEc2    VALUEcn
 
 Use Case : 
 ```php
-use Ecxod/Apache;
+use Ecxod\Apache\Apache;
 
-# This are the Keys
+# This are the Keys (must match to number of columns in the config)
 $keysArr = ["KEY1", "KEY2", "KEYn"];
 
 # This is the config file you want to parse
 $configPath = '/etc/apache2/sites-enabled/001-SSLHost.conf';
 
-$result = parseApacheMacroConfigLinear($configPath);
+$parseConfig = new Apacche;
+$result = $parseConfig->parseApacheMacroConfigLinear($configPath);
 
 print_r($result);
 
