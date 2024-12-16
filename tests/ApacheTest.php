@@ -70,19 +70,19 @@ class ApacheTest extends TestCase
 
     public function testNonExistentDirectory()
     {
-        $result =  $this->apache->getMacroDefinitions('/non/existent/directory');
+        $result =  $this->apache->getMacroDefinitions(directory: '/non/existent/directory');
         $this->assertFalse(condition: $result);
     }
 
     public function testEmptyDirectory()
     {
-        $result =  $this->apache->getMacroDefinitions($this->testDir);
+        $result =  $this->apache->getMacroDefinitions(directory: $this->testDir);
         $this->assertEmpty(actual: $result);
     }
 
     public function testNoMacroDefinitions()
     {
-        file_put_contents($this->testDir . '/test.conf', "Some content without macro");
+        file_put_contents(filename: "{$this->testDir}/test.conf", data: "Some content without macro");
         $result =  $this->apache->getMacroDefinitions($this->testDir);
         $this->assertEmpty(actual: $result);
     }
