@@ -58,7 +58,7 @@ class ApacheTest extends TestCase
         file_put_contents($this->testDir . '/test1.conf', "<Macro SSLHost1 \$domain \$port \$docroot \$allowed>\nSomeContent\n</Macro>");
         file_put_contents($this->testDir . '/test2.conf', "<Macro SSLHost2 \$domain \$port \$docroot>\nOtherContent\n</Macro>");
 
-        $result = getMacroDefinitions($this->testDir);
+        $result =  $this->apache->getMacroDefinitions($this->testDir);
 
         $expected = [
             'SSLHost1' => ['$domain', '$port', '$docroot', '$allowed'],
@@ -70,20 +70,20 @@ class ApacheTest extends TestCase
 
     public function testNonExistentDirectory()
     {
-        $result = getMacroDefinitions('/non/existent/directory');
+        $result =  $this->apache->getMacroDefinitions('/non/existent/directory');
         $this->assertFalse($result);
     }
 
     public function testEmptyDirectory()
     {
-        $result = getMacroDefinitions($this->testDir);
+        $result =  $this->apache->getMacroDefinitions($this->testDir);
         $this->assertEmpty($result);
     }
 
     public function testNoMacroDefinitions()
     {
         file_put_contents($this->testDir . '/test.conf', "Some content without macro");
-        $result = getMacroDefinitions($this->testDir);
+        $result =  $this->apache->getMacroDefinitions($this->testDir);
         $this->assertEmpty($result);
     }
 
