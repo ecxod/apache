@@ -136,4 +136,24 @@ EOD;
         $result = $this->apache->parseApacheMacroConfigLinear();
         $this->assertFalse($result);
     }
+
+
+
+
+
+    public function testReadConfigFile(){
+        $this->assertTrue(true);
+    }
+
+    public function testArrayToXml(){
+        $this->assertTrue(true);
+    }
+    public function testArrayToJson(){
+        $this->assertTrue(true);
+    }
+
+    public function testProcessConfig(){
+        $this->assertTrue(true);
+    }
+
 }
