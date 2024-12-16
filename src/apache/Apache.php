@@ -44,7 +44,7 @@ class Apache
         $directory ?? "/etc/apache2/conf-enabled";
 
         // prüfen ob $directory existiert
-        if(!is_dir(filename: $directory) and !is_link(filename: $directory)){
+        if (!is_dir(filename: $directory) and !is_link(filename: $directory)) {
             return false;
         }
 
@@ -56,10 +56,14 @@ class Apache
             $lines = explode(separator: "\n", string: $content);
 
             foreach ($lines as $line) {
-                if (strpos(haystack: trim(string: $line), needle: '<Macro ') === 0) {
+
+                // removing trailing and leading <>, die Zeile darf sonst keine Klammern enthalten
+                $line = str_replace(search: ["<", ">"], replace: "", subject: $line);
+
+                if (strpos(haystack: trim(string: $line), needle: 'Macro ') === 0) {
                     $words = preg_split(pattern: '/\s+/', subject: $line, limit: -1, flags: PREG_SPLIT_NO_EMPTY);
                     // zB. <Macro SSLHost $domain $port $docroot ... 
-                    $macroName = strval($words[1]);
+                    $macroName = strval(value: $words[1]);
                     $macroVariables = $words;
                     // wir lassen die ersten beiden Elemente weg
                     array_splice(array: $macroVariables, offset: 0, length: 2);
