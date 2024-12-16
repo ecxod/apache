@@ -55,8 +55,8 @@ class ApacheTest extends TestCase
     public function testGetMacroDefinitions()
     {
         // Test-Dateien erstellen
-        file_put_contents($this->testDir . '/test1.conf', "<Macro SSLHost1 \$domain \$port \$docroot \$allowed>\nSomeContent\n</Macro>");
-        file_put_contents($this->testDir . '/test2.conf', "<Macro SSLHost2 \$domain \$port \$docroot>\nOtherContent\n</Macro>");
+        file_put_contents($this->testDir . '/test1.conf', "<Macro SSLHost1 \$domain \$port \$docroot \$allowed >");
+        file_put_contents($this->testDir . '/test2.conf', "<Macro SSLHost2 \$domain \$port \$docroot >");
 
         $result =  $this->apache->getMacroDefinitions($this->testDir);
 
