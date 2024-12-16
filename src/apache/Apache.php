@@ -13,14 +13,12 @@ class Apache
     public $escape;
     public $enclosure;
     public $separator;
-    public $macropath;
 
     function __construct()
     {
         $this->escape = "\\";
         $this->enclosure = "\'";
         $this->separator = ",";
-        $this->macropath = "/etc/apache2/conf-enabled";
     }
 
 
@@ -33,15 +31,22 @@ class Apache
      * ]   
      * 
      * @param string $directory
-     * @return array
+     * @return array|bool
      * @author Christian <c@zp1.net>
      * @link https://github.com/ecxod/apache
      * @license MIT
      * @version 1.0.0
      */
-    function getMacroDefinitions(string $directory = $this->macropath): array
+    function getMacroDefinitions(string $directory): array|bool
     {
         $macros = [];
+
+        $directory ?? "/etc/apache2/conf-enabled";
+
+        // prüfen ob $directory existiert
+        if(!is_dir(filename: $directory) and !is_link(filename: $directory)){
+            return false;
+        }
 
         $files = glob(pattern: $directory . '/*.conf');
         sort(array: $files);
