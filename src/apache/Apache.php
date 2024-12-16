@@ -24,6 +24,57 @@ class Apache
     }
 
 
+    /** 
+     * erzeugt eine array die die KonfigurationsdateienNamen enthält. 
+     * (Nur die Namen)   
+     * 
+     * @param string $directory
+     * @return array|bool
+     * @author Christian <c@zp1.net>
+     * @link https://github.com/ecxod/apache
+     * @license MIT
+     * @version 1.0.0
+     */
+    function walkThrueFolderAndReturnFilesArray(string $directory)
+    {
+
+        $directory ?? "/etc/apache2/conf-enabled";
+
+        // prüfen ob $directory existiert
+        if (!is_dir(filename: $directory) and !is_link(filename: $directory)) {
+            return false;
+        }
+
+        $files = glob(pattern: $directory . '/*.conf');
+        sort(array: $files);
+
+        return $files;
+    }
+
+    /** 
+     * erzeugt eine array die die Konfigurationsdateien enthält. 
+     * (die ganzen Dateien)   
+     * 
+     * @param string $directory
+     * @return array
+     * @author Christian <c@zp1.net>
+     * @link https://github.com/ecxod/apache
+     * @license MIT
+     * @version 1.0.0
+     */
+    function walkThrueFolderAndReturnFilesInAArray(string $directory): array
+    {
+        $allFilesInAArray = [];
+
+        $files = $this->walkThrueFolderAndReturnFilesArray(directory: $directory);
+        foreach ($files as $file) {
+            $content = file_get_contents(filename: $file);
+            $allFilesInAArray[basename(path: $file)] = strval(value: $content);
+        }
+        return $allFilesInAArray;
+    }
+
+
     /**
      * erzeugt eine array der Macro Namen und Macro Variablen.   
      * zB so :  
@@ -43,15 +94,7 @@ class Apache
     {
         $macros = [];
 
-        $directory ?? "/etc/apache2/conf-enabled";
-
-        // prüfen ob $directory existiert
-        if (!is_dir(filename: $directory) and !is_link(filename: $directory)) {
-            return false;
-        }
-
-        $files = glob(pattern: $directory . '/*.conf');
-        sort(array: $files);
+        $files = $this->walkThrueFolderAndReturnFilesArray(directory: $directory);
 
         foreach ($files as $file) {
             $content = file_get_contents(filename: $file);
@@ -256,7 +299,7 @@ class Apache
             }
             if ($output === "json") {
                 // // Ausgabe als JSON
-                return $this->arrayToJson($configArray);    
+                return $this->arrayToJson($configArray);
             }
         }
 

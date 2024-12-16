@@ -141,19 +141,65 @@ EOD;
 
 
 
-    public function testReadConfigFile(){
+    /**
+     * //TODO: Test schreiben für testReadConfigFile
+     * 
+    */
+    public function testReadConfigFile()
+    {
         $this->assertTrue(true);
     }
 
-    public function testArrayToXml(){
-        $this->assertTrue(true);
-    }
-    public function testArrayToJson(){
+    /**
+     * //TODO: Test schreiben für testArrayToXml
+     * 
+    */
+    public function testArrayToXml()
+    {
         $this->assertTrue(true);
     }
 
-    public function testProcessConfig(){
+    /**
+     * //TODO: Test schreiben für testArrayToJson
+     * 
+    */
+    public function testArrayToJson()
+    {
         $this->assertTrue(true);
     }
+
+    /**
+     * //TODO: Test schreiben für testProcessConfig
+     * 
+    */
+    public function testProcessConfig()
+    {
+        $this->assertTrue(true);
+    }
+
+
+    /**
+     * //TODO: Test schreiben für testWalkThrueFolderAndReturnFilesArray
+     * 
+    */
+    public function testWalkThrueFolderAndReturnFilesArray()
+    {
+        $this->assertTrue(true);
+    }
+
+
+    /**
+     * //TODO: Test schreiben für testWalkThrueFolderAndReturnFilesInAArray
+     * 
+    */
+    public function testWalkThrueFolderAndReturnFilesInAArray()
+    {
+        $this->assertTrue(true);
+    }
+
+
+
+
+
 
 }
