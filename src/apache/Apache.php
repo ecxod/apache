@@ -13,13 +13,59 @@ class Apache
     public $escape;
     public $enclosure;
     public $separator;
+    public $macropath;
 
     function __construct()
     {
         $this->escape = "\\";
         $this->enclosure = "\'";
         $this->separator = ",";
+        $this->macropath = "/etc/apache2/conf-enabled";
     }
+
+
+    /**
+     * erzeugt eine array der Macro Namen und Macro Variablen.   
+     * zB so :  
+     * [  
+     *      SSLHost1 => ["$domain", "$port", "$docroot", "$allowed", "$errorlevel"] ,  
+     *      SSLHost2 => ["$domain", "$port", "$docroot", "$allowed", "$errorlevel"]  
+     * ]   
+     * 
+     * @param string $directory
+     * @return array
+     * @author Christian <c@zp1.net>
+     * @link https://github.com/ecxod/apache
+     * @license MIT
+     * @version 1.0.0
+     */
+    function getMacroDefinitions(string $directory = $this->macropath): array
+    {
+        $macros = [];
+
+        $files = glob(pattern: $directory . '/*.conf');
+        sort(array: $files);
+
+        foreach ($files as $file) {
+            $content = file_get_contents(filename: $file);
+            $lines = explode(separator: "\n", string: $content);
+
+            foreach ($lines as $line) {
+                if (strpos(haystack: trim(string: $line), needle: '<Macro ') === 0) {
+                    $words = preg_split(pattern: '/\s+/', subject: $line, limit: -1, flags: PREG_SPLIT_NO_EMPTY);
+                    // zB. <Macro SSLHost $domain $port $docroot ... 
+                    $macroName = strval($words[1]);
+                    $macroVariables = $words;
+                    // wir lassen die ersten beiden Elemente weg
+                    array_splice(array: $macroVariables, offset: 0, length: 2);
+                    $macros[$macroName] = $macroVariables;
+                    break;
+                }
+            }
+        }
+        return $macros;
+    }
+
 
     /**
      * liest eine Apache2 Macro-Konfigurationsdatei ein, die durch Leerzeichen getrennten Variablen  
