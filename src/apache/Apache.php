@@ -220,18 +220,24 @@ class Apache
      * 
      * @param string $configFile 
      * @param string $output 
-     * @return array|void 
+     * @return array|bool|string|void 
      * @author Christian <c@zp1.net>
      * @link https://github.com/ecxod/apache
      * @license MIT
      * @version 1.0.0
      */
-    function processConfig($configFile = 'path/to/your/apache/config/file', $output = "array")
+    function processConfig($configFile = 'path/to/your/apache/config/file', $output = "array"): array|bool|string
     {
 
-        if (file_exists($configFile)) {
+        $outputarr = ['array', 'xml', 'json'];
+
+        if (
+            file_exists(filename: $configFile)
+            and
+            in_array(needle: $output, haystack: $outputarr)
+        ) {
             // Lesen der Konfigurationsdatei als Array
-            $configArray = $this->readConfigFile($configFile);
+            $configArray = $this->readConfigFile(filename: $configFile);
             if ($output === "array") {
                 return $configArray;
             }
@@ -246,14 +252,14 @@ class Apache
                 // $this->arrayToXml($configArray, $xmlWriter);
                 // $xmlWriter->endElement();
                 // echo $xmlWriter->outputMemory();
+                return false;
             }
             if ($output === "json") {
                 // // Ausgabe als JSON
-                // echo "\nJSON:\n";
-                // echo $this->arrayToJson($configArray);    
+                return $this->arrayToJson($configArray);    
             }
         }
 
-        return;
+        return true;
     }
 }
