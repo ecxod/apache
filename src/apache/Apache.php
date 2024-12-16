@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Ecxod\Apache;
 
+use XMLWriter;
+
 /** 
  * @package Ecxod\Apache 
  */
@@ -145,5 +147,113 @@ class Apache
         }
 
         return  $result;
+    }
+
+
+
+
+    /**
+     * Funktion zum Lesen der Konfigurationsdatei
+     * 
+     * @param mixed $filename 
+     * @return array 
+     * @author Christian <c@zp1.net>
+     * @link https://github.com/ecxod/apache
+     * @license MIT
+     * @version 1.0.0
+     */
+    function readConfigFile(string $filename = null, string $directory = "/etc/apache2/conf-enabled"): array
+    {
+        $config = [];
+        $directory ?? "/etc/apache2/conf-enabled";
+
+        if (file_exists(realpath($directory . DIRECTORY_SEPARATOR . $filename)) and !empty($filename)) {
+
+            $lines = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+            foreach ($lines as $line) {
+                if (strpos($line, '#') === 0 || trim($line) === '') continue;
+
+                [$key, $value] = explode('=', $line, 2);
+                $config[trim($key)] = trim($value);
+            }
+        }
+
+        return $config;
+    }
+
+
+    /**
+     * Funktion zum Konvertieren des Arrays zu XML
+     * 
+     * @param mixed $array 
+     * @param mixed $xmlWriter 
+     * @return void 
+     * @author Christian <c@zp1.net>
+     * @link https://github.com/ecxod/apache
+     * @license MIT
+     * @version 1.0.0
+     */
+    function arrayToXml($array, $xmlWriter)
+    {
+        foreach ($array as $key => $value) {
+            if (is_array($value)) {
+                $xmlWriter->startElement($key);
+                arrayToXml($value, $xmlWriter);
+                $xmlWriter->endElement();
+            } else {
+                $xmlWriter->writeElement($key, $value);
+            }
+        }
+    }
+
+    // Funktion zum Konvertieren des Arrays zu JSON
+    function arrayToJson($array)
+    {
+        return json_encode($array, JSON_PRETTY_PRINT);
+    }
+
+
+
+    /**
+     * Hauptfunktion
+     * 
+     * @param string $configFile 
+     * @param string $output 
+     * @return array|void 
+     * @author Christian <c@zp1.net>
+     * @link https://github.com/ecxod/apache
+     * @license MIT
+     * @version 1.0.0
+     */
+    function processConfig($configFile = 'path/to/your/apache/config/file', $output = "array")
+    {
+
+        if (file_exists($configFile)) {
+            // Lesen der Konfigurationsdatei als Array
+            $configArray = $this->readConfigFile($configFile);
+            if ($output === "array") {
+                return $configArray;
+            }
+            if ($output === "xml") {
+                // // Ausgabe als XML
+                // echo "XML:\n";
+                // $xmlWriter = new XmlWriter();
+                // $xmlWriter->openMemory();
+                // $xmlWriter->startDocument('1.0', 'UTF-8');
+                // $xmlWriter->startElement('configuration');
+
+                // $this->arrayToXml($configArray, $xmlWriter);
+                // $xmlWriter->endElement();
+                // echo $xmlWriter->outputMemory();
+            }
+            if ($output === "json") {
+                // // Ausgabe als JSON
+                // echo "\nJSON:\n";
+                // echo $this->arrayToJson($configArray);    
+            }
+        }
+
+        return;
     }
 }
