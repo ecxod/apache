@@ -55,36 +55,36 @@ class ApacheTest extends TestCase
     public function testGetMacroDefinitions()
     {
         // Test-Dateien erstellen
-        file_put_contents($this->testDir . '/test1.conf', "<Macro SSLHost1 \$domain \$port \$docroot \$allowed");
-        file_put_contents($this->testDir . '/test2.conf', "<Macro SSLHost2 \$domain \$port \$docroot");
+        file_put_contents("{$this->testDir}/test1.conf", "<Macro SSLHost1 \$domain \$port \$docroot \$allowed");
+        file_put_contents("{$this->testDir}/test2.conf", "<Macro SSLHost2 \$domain \$port \$docroot");
 
-        $result =  $this->apache->getMacroDefinitions($this->testDir);
+        $result =  $this->apache->getMacroDefinitions(directory: $this->testDir);
 
         $expected = [
             'SSLHost1' => ['$domain', '$port', '$docroot', '$allowed'],
             'SSLHost2' => ['$domain', '$port', '$docroot']
         ];
 
-        $this->assertEquals($expected, $result);
+        $this->assertEquals(expected:$expected, actual: $result);
     }
 
     public function testNonExistentDirectory()
     {
         $result =  $this->apache->getMacroDefinitions('/non/existent/directory');
-        $this->assertFalse($result);
+        $this->assertFalse(condition: $result);
     }
 
     public function testEmptyDirectory()
     {
         $result =  $this->apache->getMacroDefinitions($this->testDir);
-        $this->assertEmpty($result);
+        $this->assertEmpty(actual: $result);
     }
 
     public function testNoMacroDefinitions()
     {
         file_put_contents($this->testDir . '/test.conf', "Some content without macro");
         $result =  $this->apache->getMacroDefinitions($this->testDir);
-        $this->assertEmpty($result);
+        $this->assertEmpty(actual: $result);
     }
 
 
@@ -96,13 +96,13 @@ class ApacheTest extends TestCase
 
         $keysArr = ["KEY1", "KEY2", "KEYn"];
         $configContent = <<<EOD
-# This is a comment
-VALUEa1    VALUEa2    \
-    VALUEan
-# VALUEb1    VALUEb2    VALUEbn
-VALUEb1    VALUEb2    VALUEbn
-VALUEc1    VALUEc2    VALUEcn
-EOD;
+        # This is a comment
+        VALUEa1    VALUEa2    \
+            VALUEan
+        # VALUEb1    VALUEb2    VALUEbn
+        VALUEb1    VALUEb2    VALUEbn
+        VALUEc1    VALUEc2    VALUEcn
+        EOD;
 
         file_put_contents($this->tempFile, $configContent);
 
@@ -147,7 +147,7 @@ EOD;
     */
     public function testReadConfigFile()
     {
-        $this->assertTrue(true);
+        $this->assertTrue(condition: true,message: 'WARNING : testReadConfigFile not written yet!');
     }
 
     /**
@@ -156,7 +156,7 @@ EOD;
     */
     public function testArrayToXml()
     {
-        $this->assertTrue(true);
+        $this->assertTrue(condition: true,message: 'WARNING : testArrayToXml not written yet!');
     }
 
     /**
@@ -165,7 +165,7 @@ EOD;
     */
     public function testArrayToJson()
     {
-        $this->assertTrue(true);
+        $this->assertTrue(condition: true,message: 'WARNING : testArrayToJson not written yet!');
     }
 
     /**
@@ -174,7 +174,7 @@ EOD;
     */
     public function testProcessConfig()
     {
-        $this->assertTrue(true);
+        $this->assertTrue(condition: true,message: 'WARNING : testProcessConfig not written yet!');
     }
 
 
@@ -184,7 +184,7 @@ EOD;
     */
     public function testWalkThrueFolderAndReturnFilesArray()
     {
-        $this->assertTrue(true);
+        $this->assertTrue(condition: true,message: 'WARNING : testWalkThrueFolderAndReturnFilesArray not written yet!');
     }
 
 
@@ -194,7 +194,7 @@ EOD;
     */
     public function testWalkThrueFolderAndReturnFilesInAArray()
     {
-        $this->assertTrue(true);
+        $this->assertTrue(condition: true,message: 'WARNING : testWalkThrueFolderAndReturnFilesInAArray not written yet!');
     }
 
 
