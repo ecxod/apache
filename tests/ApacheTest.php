@@ -9,23 +9,89 @@ use PHPUnit\Framework\TestCase;
 class ApacheTest extends TestCase
 {
     private $tempFile;
+    private $testDir;
 
     private $apache;
 
     protected function setUp(): void
     {
-        $this->tempFile = tempnam(sys_get_temp_dir(), 'apache_config_');
+        $this->tempFile = tempnam(directory: sys_get_temp_dir(), prefix: 'apache_config_');
+        $this->testDir = sys_get_temp_dir() . '/test_apache_conf';
+        mkdir($this->testDir);
         $this->apache = new Apache;
     }
 
     protected function tearDown(): void
     {
+        $this->removeDirectory($this->testDir);
+
         if (file_exists($this->tempFile)) {
             unlink($this->tempFile);
         }
     }
 
-    public function testParseApacheMacroConfigLinear(): void
+
+    /** removint Test Directory and everything inside.
+     * @param mixed $dir 
+     * @return void 
+     */
+    private function removeDirectory($dir)
+    {
+        if (is_dir(filename: $dir)) {
+            $objects = scandir(directory: $dir);
+            foreach ($objects as $object) {
+                if ($object != "." && $object != "..") {
+                    if (is_dir(filename: $dir . "/" . $object)) {
+                        $this->removeDirectory($dir . "/" . $object);
+                    } else {
+                        unlink(filename: $dir . "/" . $object);
+                    }
+                }
+            }
+            rmdir(directory: $dir);
+        }
+    }
+
+    public function testGetMacroDefinitions()
+    {
+        // Test-Dateien erstellen
+        file_put_contents($this->testDir . '/test1.conf', "<Macro SSLHost1 \$domain \$port \$docroot \$allowed>\nSomeContent\n</Macro>");
+        file_put_contents($this->testDir . '/test2.conf', "<Macro SSLHost2 \$domain \$port \$docroot>\nOtherContent\n</Macro>");
+
+        $result = getMacroDefinitions($this->testDir);
+
+        $expected = [
+            'SSLHost1' => ['$domain', '$port', '$docroot', '$allowed'],
+            'SSLHost2' => ['$domain', '$port', '$docroot']
+        ];
+
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testNonExistentDirectory()
+    {
+        $result = getMacroDefinitions('/non/existent/directory');
+        $this->assertFalse($result);
+    }
+
+    public function testEmptyDirectory()
+    {
+        $result = getMacroDefinitions($this->testDir);
+        $this->assertEmpty($result);
+    }
+
+    public function testNoMacroDefinitions()
+    {
+        file_put_contents($this->testDir . '/test.conf', "Some content without macro");
+        $result = getMacroDefinitions($this->testDir);
+        $this->assertEmpty($result);
+    }
+
+
+
+
+
+    public function testParseApacheMacroConfigLinear()
     {
 
         $keysArr = ["KEY1", "KEY2", "KEYn"];
@@ -40,7 +106,7 @@ EOD;
 
         file_put_contents($this->tempFile, $configContent);
 
-        $result = $this->apache->parseApacheMacroConfigLinear(filePath: $this->tempFile,keysArr: $keysArr);
+        $result = $this->apache->parseApacheMacroConfigLinear(filePath: $this->tempFile, keysArr: $keysArr);
 
         $this->assertIsArray($result);
         $this->assertCount(3, $result);
