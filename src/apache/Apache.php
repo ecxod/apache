@@ -29,24 +29,26 @@ class Apache
      * (Nur die Namen)   
      * 
      * @param string $directory
-     * @return array|bool
+     * @return array
      * @author Christian <c@zp1.net>
      * @link https://github.com/ecxod/apache
      * @license MIT
      * @version 1.0.0
      */
-    function walkThrueFolderAndReturnFilesArray(string $directory)
+    function walkThrueFolderAndReturnFilesArray(string $directory): array
     {
-
-        $directory ?? "/etc/apache2/conf-enabled";
 
         // prüfen ob $directory existiert
         if (!is_dir(filename: $directory) and !is_link(filename: $directory)) {
-            return false;
+            $files = [];
         }
 
         $files = glob(pattern: $directory . '/*.conf');
-        sort(array: $files);
+        if(!empty($files)){
+            sort(array: $files);
+        }else{
+            $files = [];
+        }
 
         return $files;
     }
@@ -84,39 +86,41 @@ class Apache
      * ]   
      * 
      * @param string $directory
-     * @return array|bool
+     * @return array
      * @author Christian <c@zp1.net>
      * @link https://github.com/ecxod/apache
      * @license MIT
      * @version 1.0.0
      */
-    function getMacroDefinitions(string $directory): array|bool
+    function getMacroDefinitions(string $directory): array
     {
         $macros = [];
 
         $files = $this->walkThrueFolderAndReturnFilesArray(directory: $directory);
+        if (!empty($files)){
+            foreach ($files as $file) {
+                $content = file_get_contents(filename: $file);
+                $lines = explode(separator: "\n", string: $content);
 
-        foreach ($files as $file) {
-            $content = file_get_contents(filename: $file);
-            $lines = explode(separator: "\n", string: $content);
+                foreach ($lines as $line) {
 
-            foreach ($lines as $line) {
+                    // removing trailing and leading <>, die Zeile darf sonst keine Klammern enthalten
+                    $line = str_replace(search: ["<", ">"], replace: "", subject: $line);
 
-                // removing trailing and leading <>, die Zeile darf sonst keine Klammern enthalten
-                $line = str_replace(search: ["<", ">"], replace: "", subject: $line);
-
-                if (strpos(haystack: trim(string: $line), needle: 'Macro ') === 0) {
-                    $words = preg_split(pattern: '/\s+/', subject: $line, limit: -1, flags: PREG_SPLIT_NO_EMPTY);
-                    // zB. <Macro SSLHost $domain $port $docroot ... 
-                    $macroName = strval(value: $words[1]);
-                    $macroVariables = $words;
-                    // wir lassen die ersten beiden Elemente weg
-                    array_splice(array: $macroVariables, offset: 0, length: 2);
-                    $macros[$macroName] = $macroVariables;
-                    break;
+                    if (strpos(haystack: trim(string: $line), needle: 'Macro ') === 0) {
+                        $words = preg_split(pattern: '/\s+/', subject: $line, limit: -1, flags: PREG_SPLIT_NO_EMPTY);
+                        // zB. <Macro SSLHost $domain $port $docroot ... 
+                        $macroName = strval(value: $words[1]);
+                        $macroVariables = $words;
+                        // wir lassen die ersten beiden Elemente weg
+                        array_splice(array: $macroVariables, offset: 0, length: 2);
+                        $macros[$macroName] = $macroVariables;
+                        break;
+                    }
                 }
-            }
+            }            
         }
+
         return $macros;
     }
 
