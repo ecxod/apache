@@ -65,13 +65,13 @@ class ApacheTest extends TestCase
             'SSLHost2' => ['$domain', '$port', '$docroot']
         ];
 
-        $this->assertEquals(expected:$expected, actual: $result);
+        $this->assertEquals(expected: $expected, actual: $result);
     }
 
     public function testNonExistentDirectory()
     {
         $result =  $this->apache->getMacroDefinitions(directory: '/non/existent/directory');
-        $this->assertFalse(condition: $result);
+        $this->assertEmpty(actual: $result);
     }
 
     public function testEmptyDirectory()
@@ -144,62 +144,56 @@ class ApacheTest extends TestCase
     /**
      * //TODO: Test schreiben für testReadConfigFile
      * 
-    */
+     */
     public function testReadConfigFile()
     {
-        $this->assertTrue(condition: true,message: 'WARNING : testReadConfigFile not written yet!');
+        $this->assertTrue(condition: true, message: 'WARNING : testReadConfigFile not written yet!');
     }
 
     /**
      * //TODO: Test schreiben für testArrayToXml
      * 
-    */
+     */
     public function testArrayToXml()
     {
-        $this->assertTrue(condition: true,message: 'WARNING : testArrayToXml not written yet!');
+        $this->assertTrue(condition: true, message: 'WARNING : testArrayToXml not written yet!');
     }
 
     /**
      * //TODO: Test schreiben für testArrayToJson
      * 
-    */
+     */
     public function testArrayToJson()
     {
-        $this->assertTrue(condition: true,message: 'WARNING : testArrayToJson not written yet!');
+        $this->assertTrue(condition: true, message: 'WARNING : testArrayToJson not written yet!');
     }
 
     /**
      * //TODO: Test schreiben für testProcessConfig
      * 
-    */
+     */
     public function testProcessConfig()
     {
-        $this->assertTrue(condition: true,message: 'WARNING : testProcessConfig not written yet!');
+        $this->assertTrue(condition: true, message: 'WARNING : testProcessConfig not written yet!');
     }
 
 
     /**
      * //TODO: Test schreiben für testWalkThrueFolderAndReturnFilesArray
      * 
-    */
+     */
     public function testWalkThrueFolderAndReturnFilesArray()
     {
-        $this->assertTrue(condition: true,message: 'WARNING : testWalkThrueFolderAndReturnFilesArray not written yet!');
+        $this->assertTrue(condition: true, message: 'WARNING : testWalkThrueFolderAndReturnFilesArray not written yet!');
     }
 
 
     /**
      * //TODO: Test schreiben für testWalkThrueFolderAndReturnFilesInAArray
      * 
-    */
+     */
     public function testWalkThrueFolderAndReturnFilesInAArray()
     {
-        $this->assertTrue(condition: true,message: 'WARNING : testWalkThrueFolderAndReturnFilesInAArray not written yet!');
+        $this->assertTrue(condition: true, message: 'WARNING : testWalkThrueFolderAndReturnFilesInAArray not written yet!');
     }
-
-
-
-
-
-
 }
