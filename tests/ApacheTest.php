@@ -179,12 +179,12 @@ class ApacheTest extends TestCase
 
 
     /**
-     * //TODO: Test schreiben für testWalkThrueFolderAndReturnFilesArray
+     * //TODO: Test schreiben für testwalkThrueFolderAndReturnArrayOfFileNames
      * 
      */
-    public function testWalkThrueFolderAndReturnFilesArray()
+    public function testwalkThrueFolderAndReturnArrayOfFileNames()
     {
-        $this->assertTrue(condition: true, message: 'WARNING : testWalkThrueFolderAndReturnFilesArray not written yet!');
+        $this->assertTrue(condition: true, message: 'WARNING : testwalkThrueFolderAndReturnArrayOfFileNames not written yet!');
     }
 
 
