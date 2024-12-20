@@ -25,7 +25,8 @@ class Apache
 
 
     /** 
-     * erzeugt eine array die die KonfigurationsdateienNamen enthält. 
+     * erzeugt eine Array die die KonfigurationsdateienNamen enthält.  
+     * Wenn keine Endungen (zB ".conf") gefunden, dann eine leere Array. 
      * (Nur die Namen)   
      * 
      * @param string $directory
@@ -35,7 +36,7 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function walkThrueFolderAndReturnFilesArray(string $directory): array
+    function walkThrueFolderAndReturnArrayOfFileNames(string $directory, string $termination = '.conf'): array
     {
 
         // prüfen ob $directory existiert
@@ -43,10 +44,10 @@ class Apache
             $files = [];
         }
 
-        $files = glob(pattern: $directory . '/*.conf');
-        if(!empty($files)){
+        $files = glob(pattern: "$directory/*.conf");
+        if (!empty($files)) {
             sort(array: $files);
-        }else{
+        } else {
             $files = [];
         }
 
@@ -68,7 +69,7 @@ class Apache
     {
         $allFilesInAArray = [];
 
-        $files = $this->walkThrueFolderAndReturnFilesArray(directory: $directory);
+        $files = $this->walkThrueFolderAndReturnArrayOfFileNames(directory: $directory);
         foreach ($files as $file) {
             $content = file_get_contents(filename: $file);
             $allFilesInAArray[basename(path: $file)] = strval(value: $content);
@@ -96,8 +97,8 @@ class Apache
     {
         $macros = [];
 
-        $files = $this->walkThrueFolderAndReturnFilesArray(directory: $directory);
-        if (!empty($files)){
+        $files = $this->walkThrueFolderAndReturnArrayOfFileNames(directory: $directory);
+        if (!empty($files)) {
             foreach ($files as $file) {
                 $content = file_get_contents(filename: $file);
                 $lines = explode(separator: "\n", string: $content);
@@ -118,7 +119,7 @@ class Apache
                         break;
                     }
                 }
-            }            
+            }
         }
 
         return $macros;
@@ -200,7 +201,8 @@ class Apache
 
 
     /**
-     * Funktion zum Lesen der Konfigurationsdatei
+     * Funktion zum Lesen der Konfigurationsdatei in eine Array
+     * wird nur in processConfig genutzt was wiederrum nicht genutzt wird
      * 
      * @param mixed $filename 
      * @return array 
@@ -208,6 +210,7 @@ class Apache
      * @link https://github.com/ecxod/apache
      * @license MIT
      * @version 1.0.0
+     * @depprecated "DEPRECIATED: Ist nicht zuverlässig"
      */
     function readConfigFile(string $filename = null, string $directory = "/etc/apache2/conf-enabled"): array
     {
