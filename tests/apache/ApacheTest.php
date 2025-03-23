@@ -3,6 +3,7 @@
 namespace Ecxod\Tests;
 
 use Ecxod\Apache\Apache;
+use DOMDocument;
 use PHPUnit\Framework\TestCase;
 
 
