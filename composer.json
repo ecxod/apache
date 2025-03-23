@@ -22,7 +22,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^7.2|^7.4|^8.0|^8.2",
+        "php": "^8.0|^8.2",
         "predis/predis": "^2.3",
         "sentry/sdk": "^4.0"
     },
