@@ -12,7 +12,7 @@ use \InvalidArgumentException;
  * @author      Christian Eichert <c@zp1.net>
  * @author      Anton Vasiliev <email>
  */
-class Array2xml extends \Exception
+class Array2Xml extends \Exception
 {
     private             $writer;
     private string      $version            = '1.0';
@@ -290,7 +290,7 @@ class Array2xml extends \Exception
      * <element></element> or self-closing <element/>
      *
      * @access   public
-     * @param    int $syntax Either Array2xml::EMPTY_SELF_CLOSING or Array2xml::EMPTY_FULL
+     * @param    int $syntax Either Array2Xml::EMPTY_SELF_CLOSING or Array2Xml::EMPTY_FULL
      * @return   void
      *
      * @throws InvalidArgumentException if invalid syntax type is passed 
@@ -300,7 +300,7 @@ class Array2xml extends \Exception
         // Validating the input before assignment
         if($syntax !== self::EMPTY_SELF_CLOSING && $syntax !== self::EMPTY_FULL)
         {
-            throw new InvalidArgumentException( '$syntax must be either Array2xml::EMPTY_SELF_CLOSING or Array2xml::EMPTY_FULL');
+            throw new InvalidArgumentException( '$syntax must be either Array2Xml::EMPTY_SELF_CLOSING or Array2Xml::EMPTY_FULL');
         }
 
         $this->emptyElementSyntax = $syntax;
