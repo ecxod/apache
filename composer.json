@@ -2,14 +2,20 @@
     "name": "ecxod/apache",
     "description": "Langweilige Library des Ecxod Projekts",
     "type": "library",
-    "keywords": ["ecxod", "apache"],
+    "keywords": [
+        "ecxod",
+        "apache",
+        "php",
+        "xml"
+    ],
     "license": "MIT",
     "autoload": {
         "files": [
             "src/apache/Apache.php",
-            "tests/ApacheTest.php"
+            "tests/apache/ApacheTest.php"
         ],
         "psr-4": {
+            "Ecxod\\Array2Xml\\": "src/array2xml/",
             "Ecxod\\Apache\\": "src/apache/",
             "Ecxod\\Tests\\": "tests/"
         }
@@ -24,7 +30,9 @@
     "require": {
         "php": "^8.0|^8.2",
         "predis/predis": "^2.3",
-        "sentry/sdk": "^4.0"
+        "sentry/sdk": "^4.0",
+        "ext-redis": "*",
+        "ext-xmlwriter": "*"
     },
     "archive": {
         "exclude": [
@@ -33,6 +41,12 @@
             "tests",
             "vendor"
         ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Ecxod\\Tests\\Apache\\": "tests/apache/",
+            "Ecxod\\Tests\\Array2Xml": "tests/array2xml/"
+        }
     },
     "suggests": {
         "phpunit/phpunit": "^11.5"
