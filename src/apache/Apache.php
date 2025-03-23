@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Ecxod\Apache;
 
+use \Predis;
 use XMLWriter;
 
 /** 
@@ -12,15 +13,17 @@ use XMLWriter;
 class Apache
 {
 
-    public $escape;
-    public $enclosure;
-    public $separator;
+    public string $escape;
+    public string $enclosure;
+    public string $separator;
+    public string $conf_enabled;
 
-    function __construct()
+    public function __construct()
     {
         $this->escape = "\\";
         $this->enclosure = "\'";
         $this->separator = ",";
+        $this->conf_enabled = "/etc/apache2/conf-enabled";
     }
 
 
@@ -36,18 +39,22 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function walkThrueFolderAndReturnArrayOfFileNames(string $directory, string $termination = '.conf'): array
+    public function walkThrueFolderAndReturnArrayOfFileNames(string $directory, string $termination = '.conf'): array
     {
 
         // prüfen ob $directory existiert
-        if (!is_dir(filename: $directory) and !is_link(filename: $directory)) {
+        if(!is_dir(filename: $directory) and !is_link(filename: $directory))
+        {
             $files = [];
         }
 
         $files = glob(pattern: "$directory/*.conf");
-        if (!empty($files)) {
+        if(!empty($files))
+        {
             sort(array: $files);
-        } else {
+        }
+        else
+        {
             $files = [];
         }
 
@@ -70,9 +77,10 @@ class Apache
         $allFilesInAArray = [];
 
         $files = $this->walkThrueFolderAndReturnArrayOfFileNames(directory: $directory);
-        foreach ($files as $file) {
+        foreach($files as $file)
+        {
             $content = file_get_contents(filename: $file);
-            $allFilesInAArray[basename(path: $file)] = strval(value: $content);
+            $allFilesInAArray[ basename(path: $file) ] = strval(value: $content);
         }
         return $allFilesInAArray;
     }
@@ -93,29 +101,33 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function getMacroDefinitions(string $directory): array
+    public function getMacroDefinitions(string $directory): array
     {
         $macros = [];
 
         $files = $this->walkThrueFolderAndReturnArrayOfFileNames(directory: $directory);
-        if (!empty($files)) {
-            foreach ($files as $file) {
+        if(!empty($files))
+        {
+            foreach($files as $file)
+            {
                 $content = file_get_contents(filename: $file);
                 $lines = explode(separator: "\n", string: $content);
 
-                foreach ($lines as $line) {
+                foreach($lines as $line)
+                {
 
                     // removing trailing and leading <>, die Zeile darf sonst keine Klammern enthalten
-                    $line = str_replace(search: ["<", ">"], replace: "", subject: $line);
+                    $line = str_replace(search: [ "<", ">" ], replace: "", subject: $line);
 
-                    if (strpos(haystack: trim(string: $line), needle: 'Macro ') === 0) {
+                    if(strpos(haystack: trim(string: $line), needle: 'Macro ') === 0)
+                    {
                         $words = preg_split(pattern: '/\s+/', subject: $line, limit: -1, flags: PREG_SPLIT_NO_EMPTY);
                         // zB. <Macro SSLHost $domain $port $docroot ... 
                         $macroName = strval(value: $words[1]);
                         $macroVariables = $words;
                         // wir lassen die ersten beiden Elemente weg
                         array_splice(array: $macroVariables, offset: 0, length: 2);
-                        $macros[$macroName] = $macroVariables;
+                        $macros[ $macroName ] = $macroVariables;
                         break;
                     }
                 }
@@ -138,17 +150,23 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function parseApacheMacroConfigLinear(string $filePath = "", array $keysArr = [], string $macro = "SSLHost"): array|bool
+    public function parseApacheMacroConfigLinear(string $filePath = "", array $keysArr = [], string $macro = "SSLHost"): array|bool
     {
 
         $currentline = '';
-        if (empty($filePath)) {
+
+        if(empty($filePath))
+        {
             error_log("Error: Configuration file not set or empty.");
             return false;
-        } elseif (!file_exists($filePath)) {
+        }
+        elseif(!file_exists($filePath))
+        {
             error_log("Error: Configuration File '$filePath' does not exist.");
             return false;
-        } elseif (empty($keysArr)) {
+        }
+        elseif(empty($keysArr))
+        {
             error_log("Error: Variable \$keys' is empty.");
             return false;
         }
@@ -159,29 +177,49 @@ class Apache
         $lines = array_filter(array: array_map(callback: 'trim', array: explode(separator: PHP_EOL, string: $content)));
 
         $keyIndex = 0;
-        foreach ($lines as $index => $line) {
+        foreach($lines as $index => $line)
+        {
 
             $line = trim(string: strval(value: $line));
 
             // Ignoriere Kommentare und leere Zeilen
-            if (
-                empty($line) ||
-                preg_match(pattern: '/^(\s*)$/', subject: $line) ||
+            if(
+                empty($line)
+                or
+                preg_match(pattern: '/^(\s*)$/', subject: $line)
+                or
+                preg_match(pattern: '/^\#(\s*)/', subject: $line)
+                or
                 preg_match(pattern: '/^(\s*)\#(\s*)/', subject: $line)
-            ) {
-                unset($lines[$index]);
+            )
+            {
+                unset($lines[ $index ]);
                 continue;
             }
 
             // Behandle Zeilenumbrüche mit "\"
-            if (substr(string: $line, offset: -1) === $this->escape) {
+            if(substr(string: $line, offset: -1) === $this->escape)
+            {
                 $currentline = rtrim(string: $line, characters: $this->escape);
                 continue;
-            } else {
+            }
+            else
+            {
                 $currentline = str_replace(search: ",,", replace: ",", subject: $line);
             }
 
-            if (!empty($currentline)) {
+
+            $keysval = str_getcsv(string: $currentline, separator: $this->separator, enclosure: $this->enclosure, escape: $this->escape);
+            \Sentry\captureMessage(
+                "keysArr=" . json_encode($keysArr) . PHP_EOL . ", keysval=" . json_encode($keysval)
+            );
+            $macroParameters = $this->extractMacroParameters();
+            \Sentry\captureMessage(
+                "\$macroParameters = " . json_encode($macroParameters)
+            );
+
+            if(!empty($currentline))
+            {
                 $result[] = array_combine(
                     keys: $keysArr,
                     values: str_getcsv(
@@ -194,15 +232,120 @@ class Apache
             }
         }
 
-        return  $result;
+        return $result;
+    }
+
+
+    /**
+     * Returns the macro parameters like this :  
+     * ```php
+     * $macroParameters = [  
+     *      "Django"=>["$domain","$port","$PROJECT_NAME","$allowed","$loglevel","$USER",...],  
+     *      "DjangoSSL"=>["$keyname","$domain","$port","$PROJECT_NAME","$allowed",...],  
+     *      "SSLHost"=>["$domain","$port","$docroot","$allowed","$errorlevel"],  
+     *      "SSLSubHost"=>["$domain","$port","$docroot","$keyname","$logfile","$allowed"]  
+     * ];
+     * ```
+     * @return string[][]
+     */
+    public function extractMacroParameters()
+    {
+        $directory = $this->conf_enabled;
+        $files = scandir($directory);
+        $result = [];
+
+        foreach($files as $file)
+        {
+            $filePath = $directory . '/' . $file;
+            if(is_file($filePath))
+            {
+                $lines = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                foreach($lines as $line)
+                {
+                    if(preg_match('/^<Macro\s/', $line))
+                    {
+                        // Entferne Zeilenumbrüche und trimme die Zeile
+                        $line = trim($line);
+                        // Entferne das Wort "Macro" und die Klammern
+                        $line = preg_replace('/^<Macro\s+|\s*>$/', '', $line);
+                        // Ersetze doppelte Leerzeichen durch ein einzelnes Leerzeichen
+                        $line = preg_replace('/\s+/', ' ', $line);
+                        // Zerlege die Zeile in Teile
+                        $linexp = explode(' ', $line);
+                        // Erstelle ein assoziatives Array mit dem ersten Element als Schlüssel und dem Rest als Array von Werten
+                        $key = array_shift($linexp);
+                        // Check if the key already exists
+                        if(!array_key_exists($key, $result))
+                        {
+                            $result[ $key ] = $linexp;
+                        }
+                        else
+                        {
+                            \Sentry\captureMessage("Key alrready exists = " . $result[ $key ] . PHP_EOL . ", LINE = " . $line);
+                        }
+                    }
+                }
+            }
+        }
+
+        return $result;
+    }
+
+
+    public function extractMacroParametersWithCache()
+    {
+        //$redis = new Redis();
+        $redis = new Predis\Client([
+            'scheme' => 'tcp',
+            'host'   => '127.0.0.1',
+            'port'   => 6379,
+        ]);
+        $redis->connect();
+
+        $cacheKey = 'macro_parameters';
+        $cacheTimestampsKey = 'macro_parameters_timestamps';
+
+        $cachedData = $redis->get($cacheKey);
+        $cachedTimestamps = $redis->get($cacheTimestampsKey);
+
+        $directory = $this->conf_enabled;
+        $files = scandir($directory);
+        $currentTimestamps = [];
+
+        foreach($files as $file)
+        {
+            $filePath = $directory . '/' . $file;
+            if(is_file($filePath))
+            {
+                $currentTimestamps[ $file ] = filemtime($filePath);
+            }
+        }
+
+        if($cachedData && $cachedTimestamps)
+        {
+            $cachedTimestamps = json_decode($cachedTimestamps, true);
+            if($cachedTimestamps === $currentTimestamps)
+            {
+                return json_decode($cachedData, true);
+            }
+        }
+
+        $result = $this->extractMacroParameters();
+        $redis->set($cacheKey, json_encode($result));
+        $redis->set($cacheTimestampsKey, json_encode($currentTimestamps));
+
+        return $result;
     }
 
 
 
 
+
+
+
+
     /**
-     * Funktion zum Lesen der Konfigurationsdatei in eine Array
-     * wird nur in processConfig genutzt was wiederrum nicht genutzt wird
+     * Funktion zum Lesen der Konfigurationsdatei
      * 
      * @param mixed $filename 
      * @return array 
@@ -210,22 +353,24 @@ class Apache
      * @link https://github.com/ecxod/apache
      * @license MIT
      * @version 1.0.0
-     * @depprecated "DEPRECIATED: Ist nicht zuverlässig"
      */
-    function readConfigFile(string $filename = null, string $directory = "/etc/apache2/conf-enabled"): array
+    public function readConfigFile(string $filename = null): array
     {
         $config = [];
-        $directory ?? "/etc/apache2/conf-enabled";
+        $directory = $this->conf_enabled;
 
-        if (file_exists(realpath($directory . DIRECTORY_SEPARATOR . $filename)) and !empty($filename)) {
+        if(file_exists(realpath($directory . DIRECTORY_SEPARATOR . $filename)) and !empty($filename))
+        {
 
             $lines = file($filename, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-            foreach ($lines as $line) {
-                if (strpos($line, '#') === 0 || trim($line) === '') continue;
+            foreach($lines as $line)
+            {
+                if(strpos($line, '#') === 0 || trim($line) === '')
+                    continue;
 
-                [$key, $value] = explode('=', $line, 2);
-                $config[trim($key)] = trim($value);
+                [ $key, $value ] = explode('=', $line, 2);
+                $config[ trim($key) ] = trim($value);
             }
         }
 
@@ -244,23 +389,33 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function arrayToXml($array, $xmlWriter)
+    public function arrayToXml(array $array, $xmlWriter)
     {
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
+        foreach($array as $key => $value)
+        {
+            if(is_array(value: $value))
+            {
                 $xmlWriter->startElement($key);
-                arrayToXml($value, $xmlWriter);
+                $this->arrayToXml(array: $value, xmlWriter: $xmlWriter);
                 $xmlWriter->endElement();
-            } else {
+            }
+            else
+            {
                 $xmlWriter->writeElement($key, $value);
             }
         }
     }
 
-    // Funktion zum Konvertieren des Arrays zu JSON
-    function arrayToJson($array)
+
+    /**
+     * Funktion zum Konvertieren des Arrays zu JSON
+     * 
+     * @param array $array
+     * @return string
+     */
+    public function arrayToJson(array $array): string
     {
-        return json_encode($array, JSON_PRETTY_PRINT);
+        return strval(json_encode(value: $array, flags: JSON_PRETTY_PRINT));
     }
 
 
@@ -276,22 +431,25 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function processConfig($configFile = 'path/to/your/apache/config/file', $output = "array"): array|bool|string
+    public function processConfig($configFile = 'path/to/your/apache/config/file', $output = "array"): array|bool|string
     {
 
-        $outputarr = ['array', 'xml', 'json'];
+        $outputarr = [ 'array', 'xml', 'json' ];
 
-        if (
+        if(
             file_exists(filename: $configFile)
             and
             in_array(needle: $output, haystack: $outputarr)
-        ) {
+        )
+        {
             // Lesen der Konfigurationsdatei als Array
             $configArray = $this->readConfigFile(filename: $configFile);
-            if ($output === "array") {
+            if($output === "array")
+            {
                 return $configArray;
             }
-            if ($output === "xml") {
+            if($output === "xml")
+            {
                 // // Ausgabe als XML
                 // echo "XML:\n";
                 // $xmlWriter = new XmlWriter();
@@ -304,7 +462,8 @@ class Apache
                 // echo $xmlWriter->outputMemory();
                 return false;
             }
-            if ($output === "json") {
+            if($output === "json")
+            {
                 // // Ausgabe als JSON
                 return $this->arrayToJson($configArray);
             }
