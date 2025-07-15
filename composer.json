@@ -15,9 +15,11 @@
             "tests/apache/ApacheTest.php"
         ],
         "psr-4": {
-            "Ecxod\\Array2Xml\\": "src/array2xml/",
             "Ecxod\\Apache\\": "src/apache/",
-            "Ecxod\\Tests\\": "tests/"
+            "Ecxod\\Array2Xml\\": "src/array2xml/",
+            "Ecxod\\Tests\\": "tests/",
+            "Ecxod\\Tests\\Apache": "tests/apache/",
+            "Ecxod\\Tests\\Array2Xml": "tests/array2xml/"
         }
     },
     "authors": [
