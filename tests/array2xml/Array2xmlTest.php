@@ -32,11 +32,11 @@ class Array2xmlTest extends TestCase
     {
         $actual_xml = $this->array2xml->convert($actual_array);
 
-        $actual                     = new DOMDocument();
+        $actual = new DOMDocument();
         $actual->preserveWhiteSpace = false;
         $actual->loadXML($actual_xml);
 
-        $expected                     = new DOMDocument();
+        $expected = new DOMDocument();
         $expected->preserveWhiteSpace = false;
         $expected->loadXML($expected_xml);
 
