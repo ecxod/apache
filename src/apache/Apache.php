@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Ecxod\Apache;
 
 use Predis;
+use Throwable;
 use XMLWriter;
 
 /** 
@@ -26,16 +27,31 @@ class Apache
         $this->conf_enabled = "/etc/apache2/conf-enabled";
     }
 
-    protected function redis()
+    protected function redisClient()
     {
+
+        $workspace = realpath(dirname($_SERVER['DOCUMENT_ROOT']));
+        // error_log("WS=" . $workspace);
+
+        set_include_path(get_include_path() . PATH_SEPARATOR . $workspace);
+        $currentIncludePath = get_include_path();
+        // error_log("CIP=" . $currentIncludePath);
+
+        require "$workspace/vendor/autoload.php";
         //$redis = new Redis();
-        $redis = new Predis\Client([ 
-            'scheme' => 'tcp',
-            'host'   => '127.0.0.1',
-            'port'   => 6379,
-        ]);
-        $redis->connect();
-        return $redis;
+
+
+        try{
+            $client = new Predis\Client([ 
+                'scheme' => 'tcp',
+                'host'   => '127.0.0.1',
+                'port'   => 6379,
+            ]);            
+            $client->connect();
+        }catch(Throwable $e){
+            error_log($e);
+        }
+        return $client;
     }
 
 
@@ -168,7 +184,7 @@ class Apache
         array $keysArr = [],
         string $macro = "SSLHost"
     ): array|bool {
-        $redis      = $this->redis();
+        $redis      = $this->redisClient();
         $cacheKey   = 'apache_macro_config_' . md5($filePath . json_encode($keysArr) . $macro);
         $cachedData = $redis->get($cacheKey);
 
@@ -327,7 +343,7 @@ class Apache
 
     public function extractMacroParametersWithCache()
     {
-        $redis = $this->redis();
+        $redis = $this->redisClient();
 
         $cacheKey           = 'macro_parameters';
         $cacheTimestampsKey = 'macro_parameters_timestamps';
