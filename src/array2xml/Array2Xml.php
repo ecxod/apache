@@ -33,8 +33,8 @@ class Array2Xml extends Exception
     private bool        $filterNumbers      = false;
     private array       $tagsToFilter       = [];
 
-    public const int EMPTY_SELF_CLOSING = 1;
-    public const int EMPTY_FULL         = 2;
+    public const EMPTY_SELF_CLOSING = 1;
+    public const EMPTY_FULL         = 2;
 
     /**
      * Constructor
