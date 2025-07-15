@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Ecxod\Apache;
 
-use \Predis;
+use Predis;
 use XMLWriter;
 
 /** 
@@ -26,6 +26,18 @@ class Apache
         $this->conf_enabled = "/etc/apache2/conf-enabled";
     }
 
+    protected function redis()
+    {
+        //$redis = new Redis();
+        $redis = new Predis\Client([
+            'scheme' => 'tcp',
+            'host'   => '127.0.0.1',
+            'port'   => 6379,
+        ]);
+        $redis->connect();
+        return $redis;
+}
+
 
     /** 
      * erzeugt eine Array die die KonfigurationsdateienNamen enthält.  
@@ -39,7 +51,7 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    public function walkThrueFolderAndReturnArrayOfFileNames(string $directory, string $termination = '.conf'): array
+    public function walkThrueFolderAndReturnArrayOfFileNames(string $directory): array
     {
 
         // prüfen ob $directory existiert
@@ -72,11 +84,12 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    function walkThrueFolderAndReturnFilesInAArray(string $directory): array
+    public function walkThrueFolderAndReturnFilesInAArray(string $directory): array
     {
         $allFilesInAArray = [];
 
         $files = $this->walkThrueFolderAndReturnArrayOfFileNames(directory: $directory);
+
         foreach($files as $file)
         {
             $content = file_get_contents(filename: $file);
@@ -150,10 +163,21 @@ class Apache
      * @license MIT
      * @version 1.0.0
      */
-    public function parseApacheMacroConfigLinear(string $filePath = "", array $keysArr = [], string $macro = "SSLHost"): array|bool
+    public function parseApacheMacroConfigLinear(
+        string $filePath = "", 
+        array $keysArr = [], 
+        string $macro = "SSLHost"
+    ): array|bool
     {
+        $redis = $this->redis();
+        $cacheKey   = 'apache_macro_config_' . md5($filePath . json_encode($keysArr) . $macro);
+        $cachedData = $redis->get($cacheKey);
 
         $currentline = '';
+        if($cachedData)
+        {
+            return json_decode($cachedData, true);
+        }
 
         if(empty($filePath))
         {
@@ -171,10 +195,11 @@ class Apache
             return false;
         }
 
-        $content = file_get_contents(filename: $filePath);
-        $content = preg_replace(pattern: '/\s{2,}/', replacement: $this->separator, subject: $content);
-        $content = str_replace(search: $this->escape, replace: "", subject: $content);
-        $lines = array_filter(array: array_map(callback: 'trim', array: explode(separator: PHP_EOL, string: $content)));
+        $result  = [];
+        $content = file_get_contents($filePath);
+        $content = preg_replace('/\s{2,}/', $this->separator, $content);
+        $content = str_replace($this->escape, "", $content);
+        $lines = array_filter(array_map('trim', explode(PHP_EOL, $content)));
 
         $keyIndex = 0;
         foreach($lines as $index => $line)
@@ -208,30 +233,37 @@ class Apache
                 $currentline = str_replace(search: ",,", replace: ",", subject: $line);
             }
 
-
-            $keysval = str_getcsv(string: $currentline, separator: $this->separator, enclosure: $this->enclosure, escape: $this->escape);
-            \Sentry\captureMessage(
-                "keysArr=" . json_encode($keysArr) . PHP_EOL . ", keysval=" . json_encode($keysval)
-            );
-            $macroParameters = $this->extractMacroParameters();
-            \Sentry\captureMessage(
-                "\$macroParameters = " . json_encode($macroParameters)
-            );
-
             if(!empty($currentline))
             {
-                $result[] = array_combine(
-                    keys: $keysArr,
-                    values: str_getcsv(
-                        string: $currentline,
-                        separator: $this->separator,
-                        enclosure: $this->enclosure,
-                        escape: $this->escape
-                    )
+                $keyval = array_filter(
+                    str_getcsv($currentline, 
+                    $this->separator, 
+                    $this->enclosure, 
+                    $this->escape)
                 );
+
+                switch(count($keyval))
+                {
+                    // if count($keyval) == count($keysArr)
+                    case count($keysArr):
+                        $result[] = array_combine(
+                            keys: $keysArr,
+                            values: $keyval
+                        );
+                        break;
+                    default:
+                        echo '<pre>';
+                        print_r($keysArr);
+                        print_r($keyval);
+                        echo '</pre>';
+                        die('count($keyval){=' . count($keyval) . '} != count($keysArr){=' . count($keysArr) . '}');
+                }
+
             }
         }
 
+        // Cache speichern
+        $redis->set($cacheKey, json_encode($result), 3600); // 1 Stunde Cache
         return $result;
     }
 
@@ -294,13 +326,7 @@ class Apache
 
     public function extractMacroParametersWithCache()
     {
-        //$redis = new Redis();
-        $redis = new Predis\Client([
-            'scheme' => 'tcp',
-            'host'   => '127.0.0.1',
-            'port'   => 6379,
-        ]);
-        $redis->connect();
+        $redis = $this->redis();
 
         $cacheKey = 'macro_parameters';
         $cacheTimestampsKey = 'macro_parameters_timestamps';
