@@ -51,6 +51,12 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^11.2",
-        "xdebug/xdebug": "^3.2.1"
+        "xdebug/xdebug": "^3.4.0"
+    },
+    "stability-flags": {
+        "package-name": "dev"
+    },
+    "platform-dev": {
+        "php": true
     }
 }
