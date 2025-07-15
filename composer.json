@@ -18,8 +18,8 @@
             "Ecxod\\Apache\\": "src/apache/",
             "Ecxod\\Array2Xml\\": "src/array2xml/",
             "Ecxod\\Tests\\": "tests/",
-            "Ecxod\\Tests\\Apache": "tests/apache/",
-            "Ecxod\\Tests\\Array2Xml": "tests/array2xml/"
+            "Ecxod\\Tests\\Apache\\": "tests/apache/",
+            "Ecxod\\Tests\\Array2Xml\\": "tests/array2xml/"
         }
     },
     "authors": [
@@ -30,10 +30,9 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^8.0|^8.2",
+        "php": "^8.0|^8.2|^8.4",
         "predis/predis": "^2.3",
         "sentry/sdk": "^4.0",
-        "ext-redis": "*",
         "ext-xmlwriter": "*"
     },
     "archive": {
@@ -51,6 +50,7 @@
         }
     },
     "require-dev": {
-        "phpunit/phpunit": "^11.2"
+        "phpunit/phpunit": "^11.2",
+        "xdebug/xdebug": "^3.2.1"
     }
 }
