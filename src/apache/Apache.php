@@ -20,23 +20,23 @@ class Apache
 
     public function __construct()
     {
-        $this->escape = "\\";
-        $this->enclosure = "\'";
-        $this->separator = ",";
+        $this->escape       = "\\";
+        $this->enclosure    = "\'";
+        $this->separator    = ",";
         $this->conf_enabled = "/etc/apache2/conf-enabled";
     }
 
     protected function redis()
     {
         //$redis = new Redis();
-        $redis = new Predis\Client([
+        $redis = new Predis\Client([ 
             'scheme' => 'tcp',
             'host'   => '127.0.0.1',
             'port'   => 6379,
         ]);
         $redis->connect();
         return $redis;
-}
+    }
 
 
     /** 
@@ -92,7 +92,7 @@ class Apache
 
         foreach($files as $file)
         {
-            $content = file_get_contents(filename: $file);
+            $content                                   = file_get_contents(filename: $file);
             $allFilesInAArray[ basename(path: $file) ] = strval(value: $content);
         }
         return $allFilesInAArray;
@@ -124,7 +124,7 @@ class Apache
             foreach($files as $file)
             {
                 $content = file_get_contents(filename: $file);
-                $lines = explode(separator: "\n", string: $content);
+                $lines   = explode(separator: "\n", string: $content);
 
                 foreach($lines as $line)
                 {
@@ -136,7 +136,7 @@ class Apache
                     {
                         $words = preg_split(pattern: '/\s+/', subject: $line, limit: -1, flags: PREG_SPLIT_NO_EMPTY);
                         // zB. <Macro SSLHost $domain $port $docroot ... 
-                        $macroName = strval(value: $words[1]);
+                        $macroName      = strval(value: $words[1]);
                         $macroVariables = $words;
                         // wir lassen die ersten beiden Elemente weg
                         array_splice(array: $macroVariables, offset: 0, length: 2);
@@ -164,19 +164,18 @@ class Apache
      * @version 1.0.0
      */
     public function parseApacheMacroConfigLinear(
-        string $filePath = "", 
-        array $keysArr = [], 
+        string $filePath = "",
+        array $keysArr = [],
         string $macro = "SSLHost"
-    ): array|bool
-    {
-        $redis = $this->redis();
+    ): array|bool {
+        $redis      = $this->redis();
         $cacheKey   = 'apache_macro_config_' . md5($filePath . json_encode($keysArr) . $macro);
         $cachedData = $redis->get($cacheKey);
 
         $currentline = '';
         if($cachedData)
         {
-            return json_decode($cachedData, true);
+            return json_decode(json: $cachedData, associative: true);
         }
 
         if(empty($filePath))
@@ -199,7 +198,7 @@ class Apache
         $content = file_get_contents($filePath);
         $content = preg_replace('/\s{2,}/', $this->separator, $content);
         $content = str_replace($this->escape, "", $content);
-        $lines = array_filter(array_map('trim', explode(PHP_EOL, $content)));
+        $lines   = array_filter(array_map('trim', explode(PHP_EOL, $content)));
 
         $keyIndex = 0;
         foreach($lines as $index => $line)
@@ -236,16 +235,18 @@ class Apache
             if(!empty($currentline))
             {
                 $keyval = array_filter(
-                    str_getcsv($currentline, 
-                    $this->separator, 
-                    $this->enclosure, 
-                    $this->escape)
+                    array: str_getcsv(
+                        string: $currentline,
+                        separator: $this->separator,
+                        enclosure: $this->enclosure,
+                        escape: $this->escape
+                    )
                 );
 
-                switch(count($keyval))
+                switch(count(value: $keyval))
                 {
                     // if count($keyval) == count($keysArr)
-                    case count($keysArr):
+                    case count(value: $keysArr):
                         $result[] = array_combine(
                             keys: $keysArr,
                             values: $keyval
@@ -253,17 +254,17 @@ class Apache
                         break;
                     default:
                         echo '<pre>';
-                        print_r($keysArr);
-                        print_r($keyval);
+                        print_r(value: $keysArr);
+                        print_r(value: $keyval);
                         echo '</pre>';
-                        die('count($keyval){=' . count($keyval) . '} != count($keysArr){=' . count($keysArr) . '}');
+                        die('count($keyval){=' . count(value: $keyval) . '} != count($keysArr){=' . count(value: $keysArr) . '}');
                 }
 
             }
         }
 
         // Cache speichern
-        $redis->set($cacheKey, json_encode($result), 3600); // 1 Stunde Cache
+        $redis->set(key: $cacheKey, value: json_encode($result), expireResolution: 3600); // 1 Stunde Cache
         return $result;
     }
 
@@ -280,11 +281,11 @@ class Apache
      * ```
      * @return string[][]
      */
-    public function extractMacroParameters()
+    public function extractMacroParameters(): array
     {
         $directory = $this->conf_enabled;
-        $files = scandir($directory);
-        $result = [];
+        $files     = scandir($directory);
+        $result    = [];
 
         foreach($files as $file)
         {
@@ -328,14 +329,14 @@ class Apache
     {
         $redis = $this->redis();
 
-        $cacheKey = 'macro_parameters';
+        $cacheKey           = 'macro_parameters';
         $cacheTimestampsKey = 'macro_parameters_timestamps';
 
-        $cachedData = $redis->get($cacheKey);
+        $cachedData       = $redis->get($cacheKey);
         $cachedTimestamps = $redis->get($cacheTimestampsKey);
 
-        $directory = $this->conf_enabled;
-        $files = scandir($directory);
+        $directory         = $this->conf_enabled;
+        $files             = scandir($directory);
         $currentTimestamps = [];
 
         foreach($files as $file)
@@ -382,7 +383,7 @@ class Apache
      */
     public function readConfigFile(string $filename = null): array
     {
-        $config = [];
+        $config    = [];
         $directory = $this->conf_enabled;
 
         if(file_exists(realpath($directory . DIRECTORY_SEPARATOR . $filename)) and !empty($filename))
@@ -395,7 +396,7 @@ class Apache
                 if(strpos($line, '#') === 0 || trim($line) === '')
                     continue;
 
-                [ $key, $value ] = explode('=', $line, 2);
+                [ $key, $value ]      = explode('=', $line, 2);
                 $config[ trim($key) ] = trim($value);
             }
         }
