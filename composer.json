@@ -10,10 +10,6 @@
     ],
     "license": "MIT",
     "autoload": {
-        "files": [
-            "src/apache/Apache.php",
-            "tests/apache/ApacheTest.php"
-        ],
         "psr-4": {
             "Ecxod\\Apache\\": "src/apache/",
             "Ecxod\\Array2Xml\\": "src/array2xml/"
@@ -27,7 +23,7 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "php": "^8.0|^8.2|^8.4",
+        "php": "^8.0|^8.2",
         "predis/predis": "^2.3",
         "sentry/sdk": "^4.0",
         "ext-xmlwriter": "*"
