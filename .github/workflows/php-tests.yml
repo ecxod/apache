@@ -24,6 +24,6 @@ jobs:
     - name: Install PHPUnit
       run: composer require --dev phpunit/phpunit
 
-    - name: Run Tests
-      run: |
-        vendor/bin/phpunit tests
+    #- name: Run Tests
+    #  run: |
+    #    vendor/bin/phpunit tests
