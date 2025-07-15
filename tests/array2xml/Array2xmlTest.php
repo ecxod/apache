@@ -1,6 +1,6 @@
 <?php
 
-namespace Ecxod\Array2Xml\Unit;
+namespace Ecxod\Test\Array2Xml\Unit;
 
 use \DOMDocument;
 use \DOMElement;
