@@ -16,10 +16,7 @@
         ],
         "psr-4": {
             "Ecxod\\Apache\\": "src/apache/",
-            "Ecxod\\Array2Xml\\": "src/array2xml/",
-            "Ecxod\\Tests\\": "tests/",
-            "Ecxod\\Tests\\Apache\\": "tests/apache/",
-            "Ecxod\\Tests\\Array2Xml\\": "tests/array2xml/"
+            "Ecxod\\Array2Xml\\": "src/array2xml/"
         }
     },
     "authors": [
@@ -37,16 +34,8 @@
     },
     "archive": {
         "exclude": [
-            ".github",
             ".vscode",
-            "tests",
             "vendor"
         ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Ecxod\\Tests\\Apache\\": "tests/apache/",
-            "Ecxod\\Tests\\Array2Xml\\": "tests/array2xml/"
-        }
     }
 }
