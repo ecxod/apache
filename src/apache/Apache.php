@@ -38,8 +38,6 @@ class Apache
         // error_log("CIP=" . $currentIncludePath);
 
         require "$workspace/vendor/autoload.php";
-        //$redis = new Redis();
-
 
         try{
             $client = new Predis\Client([ 
@@ -184,9 +182,9 @@ class Apache
         array $keysArr = [],
         string $macro = "SSLHost"
     ): array|bool {
-        $redis      = $this->redisClient();
+        $redisClient      = $this->redisClient();
         $cacheKey   = 'apache_macro_config_' . md5($filePath . json_encode($keysArr) . $macro);
-        $cachedData = $redis->get($cacheKey);
+        $cachedData = $redisClient->get($cacheKey);
 
         $currentline = '';
         if($cachedData)
@@ -280,7 +278,7 @@ class Apache
         }
 
         // Cache speichern
-        $redis->set(key: $cacheKey, value: json_encode($result), expireResolution: 3600); // 1 Stunde Cache
+        $redisClient->set(key: $cacheKey, value: json_encode($result), expireResolution: 3600); // 1 Stunde Cache
         return $result;
     }
 
@@ -343,13 +341,13 @@ class Apache
 
     public function extractMacroParametersWithCache()
     {
-        $redis = $this->redisClient();
+        $redisClient = $this->redisClient();
 
         $cacheKey           = 'macro_parameters';
         $cacheTimestampsKey = 'macro_parameters_timestamps';
 
-        $cachedData       = $redis->get($cacheKey);
-        $cachedTimestamps = $redis->get($cacheTimestampsKey);
+        $cachedData       = $redisClient->get($cacheKey);
+        $cachedTimestamps = $redisClient->get($cacheTimestampsKey);
 
         $directory         = $this->conf_enabled;
         $files             = scandir($directory);
@@ -374,8 +372,8 @@ class Apache
         }
 
         $result = $this->extractMacroParameters();
-        $redis->set($cacheKey, json_encode($result));
-        $redis->set($cacheTimestampsKey, json_encode($currentTimestamps));
+        $redisClient->set($cacheKey, json_encode($result));
+        $redisClient->set($cacheTimestampsKey, json_encode($currentTimestamps));
 
         return $result;
     }
